@@ -63,7 +63,7 @@ body.dark {
 }
 
 .title {
-  font-size: clamp(2rem, 7vw, 3rem);
+  font-size: clamp(4rem, 14vw, 6rem); /* Doubled from clamp(2rem, 7vw, 3rem) */
   font-weight: bold;
   color: var(--title-color);
   margin: clamp(0.3rem, 1vw, 0.5rem) 0;
@@ -247,7 +247,7 @@ body.dark .game-over {
 .options {
   display: flex;
   justify-content: space-between;
-  gap: clamp(8px, 2vw, 15px);
+  gap: clamp(4px, 1vw, 8px); /* Reduced from clamp(8px, 2vw, 15px) */
   width: 100%;
   max-width: 600px;
   margin: clamp(0.3rem, 1vw, 0.5rem) 0;
@@ -260,11 +260,11 @@ body.dark .game-over {
 .btn {
   background: var(--btn-normal);
   color: var(--btn-text);
-  padding: clamp(0.4rem, 1.2vw, 0.6rem);
+  padding: clamp(0.5rem, 1.5vw, 0.8rem); /* Increased padding */
   border-radius: 8px;
   border: none;
   font-family: 'Rubik', sans-serif;
-  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  font-size: clamp(1rem, 3vw, 1.4rem); /* Increased font size */
   font-weight: bold;
   text-transform: uppercase;
   cursor: pointer;
@@ -273,8 +273,14 @@ body.dark .game-over {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: clamp(50px, 12vw, 70px);
-  min-height: clamp(45px, 9vw, 60px);
+  min-width: clamp(60px, 14vw, 80px); /* Increased from clamp(50px, 12vw, 70px) */
+  min-height: clamp(50px, 10vw, 70px); /* Increased from clamp(45px, 9vw, 60px) */
+}
+
+#new-game-btn {
+  min-width: clamp(80px, 18vw, 100px); /* Increased size for New Game button */
+  min-height: clamp(60px, 12vw, 80px); /* Increased size */
+  font-size: clamp(1.2rem, 3.5vw, 1.6rem); /* Increased font size */
 }
 
 .btn.active {
@@ -303,8 +309,8 @@ body.dark .game-over {
 }
 
 .power-icon {
-  width: clamp(18px, 5vw, 26px);
-  height: clamp(18px, 5vw, 26px);
+  width: clamp(22px, 6vw, 30px); /* Increased from clamp(18px, 5vw, 26px) */
+  height: clamp(22px, 6vw, 30px); /* Increased */
   fill: var(--btn-text);
   transition: all var(--transition-fast) var(--easing);
   stroke-width: 2.5;
@@ -322,8 +328,8 @@ body.dark .game-over {
 }
 
 .power-bar {
-  width: clamp(7px, 2vw, 10px);
-  height: clamp(3px, 0.6vw, 5px);
+  width: clamp(8px, 2.5vw, 12px); /* Increased from clamp(7px, 2vw, 10px) */
+  height: clamp(4px, 0.8vw, 6px); /* Increased from clamp(3px, 0.6vw, 5px) */
   background: var(--btn-text);
   border-radius: 2px;
   transition: opacity var(--transition-fast) var(--easing);
@@ -388,16 +394,17 @@ body.dark .page-transition {
 @media (max-width: 900px) {
   .container { padding: clamp(8px, 2vw, 12px); justify-content: space-around; }
   .game-container { width: min(95vw, 500px); padding: clamp(5px, 1.2vw, 8px); }
-  .title { font-size: clamp(1.8rem, 6vw, 2.5rem); }
+  .title { font-size: clamp(3.6rem, 12vw, 5rem); } /* Doubled */
   .scores { gap: clamp(8px, 2.5vw, 20px); max-width: 90vw; justify-content: space-between; }
-  .options { gap: clamp(6px, 1.5vw, 10px); max-width: 90vw; justify-content: space-between; }
+  .options { gap: clamp(3px, 0.8vw, 6px); max-width: 90vw; justify-content: space-between; } /* Reduced gap */
   .score-container { width: clamp(60px, 14vw, 80px); height: clamp(45px, 9vw, 55px); }
   .score-title { font-size: clamp(0.5rem, 1.8vw, 0.6rem); }
   .score-value { font-size: clamp(0.7rem, 2.5vw, 0.9rem); }
-  .btn { min-width: clamp(45px, 10vw, 60px); min-height: clamp(40px, 8vw, 50px); font-size: clamp(0.8rem, 2.2vw, 1rem); }
+  .btn { min-width: clamp(55px, 12vw, 70px); min-height: clamp(45px, 9vw, 60px); font-size: clamp(0.9rem, 2.5vw, 1.2rem); } /* Increased */
+  #new-game-btn { min-width: clamp(70px, 16vw, 90px); min-height: clamp(50px, 10vw, 70px); font-size: clamp(1rem, 3vw, 1.4rem); } /* Increased */
   .cell { font-size: clamp(2rem, 7vw, 3.2rem); }
-  .power-icon { width: clamp(16px, 4vw, 22px); height: clamp(16px, 4vw, 22px); }
-  .power-bar { width: clamp(6px, 1.8vw, 8px); height: clamp(2px, 0.5vw, 3px); }
+  .power-icon { width: clamp(18px, 5vw, 26px); height: clamp(18px, 5vw, 26px); } /* Adjusted */
+  .power-bar { width: clamp(7px, 2vw, 10px); height: clamp(3px, 0.6vw, 4px); } /* Adjusted */
   .tooltip { font-size: clamp(0.7rem, 1.8vw, 0.9rem); }
   .game-over-text { font-size: clamp(1.6rem, 5.5vw, 2rem); }
   .grid { gap: clamp(4px, 1.2vw, 6px); }
@@ -407,16 +414,17 @@ body.dark .page-transition {
 @media (max-width: 600px) {
   .container { padding: clamp(6px, 1.5vw, 10px); justify-content: space-between; }
   .game-container { width: min(95vw, 400px); padding: clamp(4px, 1vw, 6px); }
-  .title { font-size: clamp(1.6rem, 5.5vw, 2.2rem); margin: clamp(0.2rem, 0.8vw, 0.4rem) 0; }
+  .title { font-size: clamp(3.2rem, 11vw, 4.4rem); margin: clamp(0.2rem, 0.8vw, 0.4rem) 0; } /* Doubled */
   .scores { gap: clamp(6px, 2vw, 10px); justify-content: space-between; }
-  .options { gap: clamp(5px, 1.2vw, 8px); margin: clamp(0.2rem, 0.8vw, 0.4rem) 0; justify-content: space-between; }
+  .options { gap: clamp(3px, 0.7vw, 5px); margin: clamp(0.2rem, 0.8vw, 0.4rem) 0; } /* Reduced gap */
   .score-container { width: clamp(55px, 13vw, 70px); height: clamp(40px, 8vw, 50px); }
   .score-title { font-size: clamp(0.4rem, 1.6vw, 0.5rem); }
   .score-value { font-size: clamp(0.6rem, 2.2vw, 0.8rem); }
-  .btn { min-width: clamp(40px, 9vw, 50px); min-height: clamp(35px, 7vw, 45px); font-size: clamp(0.7rem, 2vw, 0.9rem); }
+  .btn { min-width: clamp(50px, 11vw, 60px); min-height: clamp(40px, 8vw, 50px); font-size: clamp(0.8rem, 2.2vw, 1rem); } /* Increased */
+  #new-game-btn { min-width: clamp(60px, 14vw, 80px); min-height: clamp(45px, 9vw, 60px); font-size: clamp(0.9rem, 2.5vw, 1.2rem); } /* Increased */
   .cell { font-size: clamp(1.8rem, 6.5vw, 2.8rem); }
-  .power-icon { width: clamp(14px, 3.5vw, 20px); height: clamp(14px, 3.5vw, 20px); }
-  .power-bar { width: clamp(5px, 1.5vw, 7px); height: clamp(2px, 0.5vw, 3px); }
+  .power-icon { width: clamp(16px, 4.5vw, 22px); height: clamp(16px, 4.5vw, 22px); } /* Adjusted */
+  .power-bar { width: clamp(6px, 1.8vw, 8px); height: clamp(2px, 0.5vw, 3px); } /* Adjusted */
   .tooltip { font-size: clamp(0.6rem, 1.6vw, 0.8rem); }
   .game-over-text { font-size: clamp(1.4rem, 5vw, 1.8rem); margin-bottom: clamp(0.4rem, 1.5vw, 0.6rem); }
   .grid { gap: clamp(3px, 1vw, 5px); }
@@ -426,14 +434,15 @@ body.dark .page-transition {
 @media (max-width: 400px) {
   .container { padding: clamp(4px, 1vw, 8px); }
   .game-container { width: min(95vw, 320px); padding: clamp(3px, 0.8vw, 5px); }
-  .title { font-size: clamp(1.4rem, 5vw, 2rem); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; }
+  .title { font-size: clamp(2.8rem, 10vw, 4rem); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; } /* Doubled */
   .scores { gap: clamp(4px, 1.5vw, 8px); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; }
-  .options { gap: clamp(4px, 1vw, 6px); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; }
+  .options { gap: clamp(2px, 0.6vw, 4px); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; } /* Reduced gap */
   .score-container { width: clamp(50px, 12vw, 60px); height: clamp(35px, 7vw, 45px); }
-  .btn { min-width: clamp(35px, 8vw, 45px); min-height: clamp(30px, 6vw, 40px); font-size: clamp(0.6rem, 1.8vw, 0.8rem); }
+  .btn { min-width: clamp(45px, 10vw, 55px); min-height: clamp(35px, 7vw, 45px); font-size: clamp(0.7rem, 2vw, 0.9rem); } /* Increased */
+  #new-game-btn { min-width: clamp(55px, 12vw, 70px); min-height: clamp(40px, 8vw, 50px); font-size: clamp(0.8rem, 2.2vw, 1rem); } /* Increased */
   .cell { font-size: clamp(1.6rem, 6vw, 2.4rem); }
-  .power-icon { width: clamp(12px, 3vw, 18px); height: clamp(12px, 3vw, 18px); }
-  .power-bar { width: clamp(4px, 1.2vw, 6px); height: clamp(1px, 0.4vw, 2px); }
+  .power-icon { width: clamp(14px, 4vw, 20px); height: clamp(14px, 4vw, 20px); } /* Adjusted */
+  .power-bar { width: clamp(5px, 1.5vw, 7px); height: clamp(1px, 0.4vw, 2px); } /* Adjusted */
   .tooltip { font-size: clamp(0.5rem, 1.4vw, 0.7rem); }
   .game-over-text { font-size: clamp(1.2rem, 4.5vw, 1.6rem); }
   .grid { gap: clamp(2px, 0.8vw, 4px); }
