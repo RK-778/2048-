@@ -25,20 +25,23 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: var(--bg-light);
             color: var(--text-light);
             text-align: center;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-family: 'Rubik', sans-serif;
             touch-action: manipulation;
-            overflow: hidden;
+            overflow-x: hidden;
+            padding: 20px;
+            padding-bottom: 60px;
             transition: background-color 0.5s var(--easing);
         }
 
@@ -47,13 +50,14 @@
         }
 
         .title {
-            font-size: clamp(5rem, 15vw, 6rem);
+            font-size: clamp(3.5rem, 15vw, 6rem);
             font-weight: bold;
             color: var(--title-color);
             cursor: pointer;
-            margin-bottom: 2rem;
+            margin: 1rem 0;
             transition: all var(--transition-slow) var(--easing);
             transform-origin: center;
+            user-select: none;
         }
 
         .title.zoom-out {
@@ -70,14 +74,14 @@
             color: #776e65;
             font-weight: 500;
             text-align: center;
-            margin-top: -1rem;
-            margin-bottom: 1rem;
+            margin: 0.5rem 0 1.5rem;
             padding: 0 1rem;
             max-width: 90%;
-            font-size: 2rem;
+            font-size: clamp(1.2rem, 4vw, 2rem);
             opacity: 0;
             animation: fadeIn 1s ease forwards;
             animation-delay: 0.5s;
+            line-height: 1.4;
         }
 
         body.dark #welcome-message {
@@ -86,6 +90,7 @@
 
         #welcome-message .name-highlight {
             color: #776e65;
+            font-weight: 700;
         }
 
         body.dark #welcome-message .name-highlight {
@@ -96,11 +101,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1.5rem;
-            padding: 0 20px;
+            gap: 1.2rem;
+            padding: 0 10px;
             width: 100%;
             max-width: 400px;
             transition: all var(--transition-medium) var(--easing);
+            margin: 1rem 0;
         }
 
         .menu.hide {
@@ -114,17 +120,23 @@
             max-width: 280px;
             background: var(--btn-normal);
             color: var(--btn-text);
-            padding: 0.8rem 1.5rem;
+            padding: 0.9rem 1.5rem;
             border-radius: 8px;
             border: none;
             font-family: 'Rubik', sans-serif;
-            font-size: clamp(1.1rem, 3.5vw, 1.3rem);
+            font-size: clamp(1rem, 4vw, 1.3rem);
             font-weight: bold;
             cursor: pointer;
             transition: all var(--transition-fast) var(--easing);
             opacity: 0;
             animation: fadeIn var(--transition-slow) var(--easing) forwards;
             position: relative;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        .btn:active {
+            transform: translateY(1px) !important;
         }
 
         .btn:hover {
@@ -152,13 +164,15 @@
             bottom: 100%;
             left: 50%;
             transform: translateX(-50%);
-            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+            font-size: clamp(0.7rem, 3vw, 0.9rem);
             white-space: nowrap;
             opacity: 0;
             transition: opacity var(--transition-fast) var(--easing);
+            pointer-events: none;
         }
 
-        .btn:hover .tooltip {
+        .btn:hover .tooltip,
+        .btn:focus .tooltip {
             visibility: visible;
             opacity: 1;
         }
@@ -185,28 +199,75 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-height: 600px) {
-            .title { font-size: clamp(1.8rem, 7vw, 2rem); }
-            #welcome-message { font-size: 1rem; margin-top: -0.5rem; }
-            .btn { padding: 0.6rem 1rem; font-size: clamp(1rem, 3vw, 1.1rem); }
-            .tooltip { font-size: clamp(0.6rem, 2vw, 0.7rem); }
-        }
-
         .credit {
             position: fixed;
-            bottom: 15px;
+            bottom: -50px;
+            left: 0;
             width: 100%;
             text-align: center;
-            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            font-size: clamp(0.8rem, 3.5vw, 1rem);
             color: var(--text-light);
             font-weight: 500;
             pointer-events: none;
-            opacity: 1;
-            transition: color 0.3s ease;
+            transition: bottom 0.5s ease, color 0.3s ease;
+            z-index: 10;
+            padding: 10px;
+        }
+
+        .credit.show {
+            bottom: 0;
         }
 
         body.dark .credit {
             color: #776e65;
+        }
+
+        /* Mobile-specific optimizations */
+        @media (max-width: 600px) {
+            .title {
+                margin: 0.5rem 0;
+                font-size: clamp(2.5rem, 12vw, 4rem);
+            }
+
+            #welcome-message {
+                margin: 0.3rem 0 1rem;
+                font-size: clamp(1rem, 4.5vw, 1.5rem);
+            }
+
+            .menu {
+                gap: 1rem;
+            }
+
+            .btn {
+                padding: 0.8rem 1.2rem;
+                font-size: clamp(0.95rem, 4.5vw, 1.2rem);
+            }
+
+            .tooltip {
+                font-size: clamp(0.65rem, 3vw, 0.8rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            .title {
+                font-size: clamp(2rem, 8vw, 3rem);
+                margin: 0.3rem 0;
+            }
+
+            #welcome-message {
+                font-size: clamp(0.9rem, 4vw, 1.2rem);
+                margin: 0.2rem 0 0.8rem;
+            }
+
+            .menu {
+                gap: 0.8rem;
+                margin: 0.5rem 0;
+            }
+
+            .btn {
+                padding: 0.7rem 1rem;
+                font-size: clamp(0.9rem, 4vw, 1.1rem);
+            }
         }
     </style>
 </head>
@@ -240,7 +301,12 @@
         </button>
     </div>
 
+    <div class="credit">BUILT BY RK { 2025 }</div>
+
     <script>
+        // Mobile-friendly touch handling
+        document.addEventListener('touchstart', function() {}, {passive: true});
+
         function toggleTheme() {
             document.body.classList.toggle('dark');
             localStorage.setItem('darkTheme', document.body.classList.contains('dark'));
@@ -305,7 +371,7 @@
             const welcomeMessage = document.getElementById('welcome-message');
             
             if (gameName) {
-                welcomeMessage.innerHTML = `Hello <span class="name-highlight">${gameName}</span> ! Come on, let's finish this game of 2048!`;
+                welcomeMessage.innerHTML = `Hello <span class="name-highlight">${gameName}</span>!<br>Let's play 2048!`;
                 welcomeMessage.style.display = 'block';
             } else {
                 welcomeMessage.style.display = 'none';
@@ -335,12 +401,43 @@
                 // Show welcome message if name exists
                 const gameName = localStorage.getItem('gameName');
                 if (gameName) {
-                    welcomeMessage.innerHTML = `Hello <span class="name-highlight">${gameName}</span> ! Come on, let's finish this game of 2048!`;
+                    welcomeMessage.innerHTML = `Hello <span class="name-highlight">${gameName}</span>!<br>Let's play 2048!`;
                     welcomeMessage.style.display = 'block';
                 }
             }
         });
+
+        // Show credit when scrolled to bottom
+        function checkScroll() {
+            const credit = document.querySelector('.credit');
+            const scrollPosition = window.scrollY || window.pageYOffset;
+            const windowHeight = window.innerHeight;
+            const bodyHeight = document.body.offsetHeight;
+            
+            // Show credit when within 100px of bottom
+            if (bodyHeight - (scrollPosition + windowHeight) < 100) {
+                credit.classList.add('show');
+            } else {
+                credit.classList.remove('show');
+            }
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('resize', checkScroll);
+        window.addEventListener('load', checkScroll);
+
+        // Better touch feedback for buttons
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.style.transform = 'translateY(1px)';
+                this.style.opacity = '0.9';
+            });
+            
+            btn.addEventListener('touchend', function() {
+                this.style.transform = '';
+                this.style.opacity = '';
+            });
+        });
     </script>
-    <div class="credit">BUILT BY RK { 2025 } </div>
 </body>
 </html>
