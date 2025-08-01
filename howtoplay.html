@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2048 How to Play</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #faf8ef;
+            --bg-dark: #12181b;
+            --text-light: #776e65;
+            --text-dark: #f9f6f2;
+            --title-color: #776e65;
+            --btn-normal: #8f7a66;
+            --btn-hover: #6e5849;
+            --btn-text: #f9f6f2;
+            --transition-fast: 0.2s;
+            --transition-medium: 0.4s;
+            --transition-slow: 0.6s;
+            --easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Rubik', sans-serif;
+            touch-action: manipulation;
+            overflow-x: hidden;
+            padding: 20px;
+            transition: background-color 0.5s var(--easing);
+        }
+
+        body.dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .title {
+            font-size: clamp(3rem, 10vw, 4rem);
+            font-weight: bold;
+            color: #776e65;
+            margin: 1rem 0 0.5rem;
+            transition: all var(--transition-slow) var(--easing);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            cursor: pointer;
+        }
+
+        body.dark .title {
+            color: #776e65;
+        }
+
+        .subtitle {
+            font-size: clamp(2rem, 6vw, 2.5rem);
+            font-weight: 700;
+            color: var(--title-color);
+            margin-bottom: 2rem;
+            transition: all var(--transition-slow) var(--easing);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            animation-delay: 0.2s;
+        }
+
+        body.dark .subtitle {
+            color: var(--text-dark);
+        }
+
+        .content {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn var(--transition-medium) var(--easing) forwards;
+            animation-delay: 0.4s;
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+        }
+
+        .content ul {
+            list-style-type: disc;
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-light);
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            animation-delay: 0.6s;
+        }
+
+        body.dark .footer {
+            color: var(--text-dark);
+        }
+
+        .back-link {
+            color: var(--btn-normal);
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all var(--transition-fast) var(--easing);
+        }
+
+        body.dark .back-link {
+            color: var(--btn-hover);
+        }
+
+        .back-link:hover {
+            color: var(--btn-hover);
+            transform: translateY(-1px);
+        }
+
+        body.dark .back-link:hover {
+            color: var(--btn-normal);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                font-size: clamp(0.9rem, 2.5vw, 1rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            .title {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+            }
+            .subtitle {
+                font-size: clamp(1.2rem, 4vw, 1.5rem);
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title" onclick="toggleTheme()">2048</h1>
+    <h2 class="subtitle">How to Play</h2>
+    
+    <div class="content">
+        <p>Welcome to 2048, a fun and addictive puzzle game! Here's how to play:</p>
+        <ul>
+            <li><strong>Objective</strong>: Combine tiles with the same number to create a tile with the value of 2048.</li>
+            <li><strong>Movement</strong>: Use the arrow keys (or swipe on mobile) to move tiles up, down, left, or right.</li>
+            <li><strong>Merging</strong>: When two tiles with the same number collide, they merge into one tile with double the value.</li>
+            <li><strong>New Tiles</strong>: After each move, a new tile (2 or 4) appears in a random empty spot.</li>
+            <li><strong>Game Over</strong>: The game ends when the grid is full and no more moves are possible.</li>
+            <li><strong>Tips</strong>: Plan your moves to avoid filling the board too quickly, and try to keep larger tiles in one corner.</li>
+        </ul>
+        <p>Have fun and aim for the 2048 tile!</p>
+    </div>
+    <div class="footer">
+        <span class="back-link" onclick="window.location.href='index.html'">BACK TO MENU</span>
+    </div>
+
+    <script>
+        // Theme toggle function
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('darkTheme', document.body.classList.contains('dark'));
+        }
+
+        // Apply saved theme
+        if (localStorage.getItem('darkTheme') === 'true') {
+            document.body.classList.add('dark');
+        }
+    </script>
+</body>
+</html>

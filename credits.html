@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2048 Credits</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #faf8ef;
+            --bg-dark: #12181b;
+            --text-light: #776e65;
+            --text-dark: #f9f6f2;
+            --title-color: #776e65;
+            --btn-normal: #8f7a66;
+            --btn-hover: #6e5849;
+            --btn-text: #f9f6f2;
+            --highlight-light: #edc22e;
+            --highlight-dark: #f2b179;
+            --transition-fast: 0.2s;
+            --transition-medium: 0.4s;
+            --transition-slow: 0.6s;
+            --easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Rubik', sans-serif;
+            touch-action: manipulation;
+            overflow-x: hidden;
+            padding: 20px;
+            transition: background-color 0.5s var(--easing);
+        }
+
+        body.dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .title {
+            font-size: clamp(3rem, 10vw, 4rem);
+            font-weight: bold;
+            color: #776e65;
+            margin: 1rem 0 0.5rem;
+            transition: all var(--transition-slow) var(--easing);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            cursor: pointer;
+        }
+
+        body.dark .title {
+            color: #776e65;
+        }
+
+        .subtitle {
+            font-size: clamp(2rem, 6vw, 2.5rem);
+            font-weight: 700;
+            color: var(--title-color);
+            margin-bottom: 2rem;
+            transition: all var(--transition-slow) var(--easing);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            animation-delay: 0.2s;
+        }
+
+        body.dark .subtitle {
+            color: var(--text-dark);
+        }
+
+        .content {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn var(--transition-medium) var(--easing) forwards;
+            animation-delay: 0.4s;
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+        }
+
+        .content .welcome {
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .content .word {
+            display: inline-block;
+            padding: 0 2px; /* Add space to prevent overlap */
+            position: relative; /* Ensure z-index works */
+            transition: transform var(--transition-fast) var(--easing);
+        }
+
+        .content .word:hover {
+            transform: scale(1.15); /* Slightly smaller scale to reduce overlap */
+            z-index: 1; /* Bring hovered word above others */
+        }
+
+        /* Alternative "pop" animation (uncomment to use instead of zoom)
+        .content .word {
+            display: inline-block;
+            padding: 0 2px;
+            position: relative;
+            transition: transform var(--transition-fast) var(--easing), color var(--transition-fast) var(--easing), text-shadow var(--transition-fast) var(--easing);
+        }
+        .content .word:hover {
+            transform: translateY(-2px);
+            color: var(--highlight-light);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        body.dark .content .word:hover {
+            color: var(--highlight-dark);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        */
+
+        .footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-light);
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            animation-delay: 0.6s;
+        }
+
+        body.dark .footer {
+            color: var(--text-dark);
+        }
+
+        .back-link {
+            color: var(--btn-normal);
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all var(--transition-fast) var(--easing);
+        }
+
+        body.dark .back-link {
+            color: var(--btn-hover);
+        }
+
+        .back-link:hover {
+            color: var(--btn-hover);
+            transform: translateY(-1px);
+        }
+
+        body.dark .back-link:hover {
+            color: var(--btn-normal);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                font-size: clamp(0.9rem, 2.5vw, 1rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            .title {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+            }
+            .subtitle {
+                font-size: clamp(1.2rem, 4vw, 1.5rem);
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (pointer: none), (pointer: coarse) {
+            .content .word:hover {
+                transform: none; /* Disable hover effect on touch devices */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title" onclick="toggleTheme()">2048</h1>
+    <h2 class="subtitle">Credits</h2>
+    
+    <div class="content">
+
+        <p>Built by RK </p>
+        <p>Inspired by the original 2048 game created by Gabriele Cirulli, this version is reimagined with my own custom style and enhancements</p>
+        <p>This project was created using HTML, CSS, JavaScript, and SCSS. It’s a fully frontend-based project crafted for smooth performance and an enjoyable user experience, with no backend dependencies.</p>
+        <p>Styling is managed using SCSS to keep the code clean and scalable. All scores and progress are saved locally using browser localStorage.</p>
+        <p>This game is a reflection of creativity, self-learning, and a love for building engaging web apps.</p>
+        <p class="welcome">Let's welcome everyone to enjoy playing and have fun with my game!</p>
+    </div>
+    <div class="footer">
+        <span class="back-link" onclick="window.location.href='index.html'">BACK TO MENU</span>
+    </div>
+
+    <script>
+        // Theme toggle function
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('darkTheme', document.body.classList.contains('dark'));
+        }
+
+        // Wrap each word in a span for hover animation
+        window.addEventListener('DOMContentLoaded', () => {
+            const content = document.querySelector('.content');
+            content.querySelectorAll('p').forEach(p => {
+                const words = p.innerHTML.split(' ');
+                p.innerHTML = words.map(word => `<span class="word">${word}</span>`).join(' ');
+            });
+        });
+
+        // Apply saved theme
+        if (localStorage.getItem('darkTheme') === 'true') {
+            document.body.classList.add('dark');
+        }
+    </script>
+</body>
+</html>

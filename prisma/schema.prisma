@@ -1,0 +1,85 @@
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+const session = require('express-session');
+const passport = require('passport');
+const GitHubStrategy = require('passport-github2').Strategy;
+const cors = require('cors');
+
+const app = express();
+const prisma = new PrismaClient();
+
+app.use(cors({ origin: process.env.VERCEL_URL || 'http://localhost:3000' }));
+app.use(express.json());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.static('public'));
+
+passport.use(new GitHubStrategy({
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET,
+  callbackURL: process.env.VERCEL_URL ? `${process.env.VERCEL_URL}/api/auth/github/callback` : 'http://localhost:3000/api/auth/github/callback'
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    const user = await prisma.user.upsert({
+      where: { githubId: profile.id },
+      update: { name: profile.displayName || profile.username },
+      create: { githubId: profile.id, name: profile.displayName || profile.username }
+    });
+    return done(null, user);
+  } catch (error) {
+    return done(error);
+  }
+}));
+
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id } });
+    done(null, user);
+  } catch (error) {
+    done(error);
+  }
+});
+
+app.get('/api/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+app.get('/api/auth/github/callback', passport.authenticate('github', { failureRedirect: '/' }), (req, res) => res.redirect('/'));
+app.get('/api/auth/user', (req, res) => {
+  if (req.user) res.json({ id: req.user.id, name: req.user.name });
+  else res.status(401).json({ error: 'Not authenticated' });
+});
+app.post('/api/score', async (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'Not authenticated' });
+  const { score } = req.body;
+  try {
+    await prisma.score.upsert({
+      where: { userId: req.user.id },
+      update: { score: Math.max(score, (await prisma.score.findUnique({ where: { userId: req.user.id } }))?.score || 0), name: req.user.name },
+      create: { userId: req.user.id, score, name: req.user.name }
+    });
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error saving score:', error);
+    res.status(500).json({ error: 'Failed to save score' });
+  }
+});
+app.get('/api/leaderboard', async (req, res) => {
+  try {
+    const scores = await prisma.score.findMany({
+      orderBy: { score: 'desc' },
+      take: 10,
+      select: { userId: true, name: true, score: true }
+    });
+    res.json(scores);
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    res.status(500).json({ error: 'Failed to fetch leaderboard' });
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

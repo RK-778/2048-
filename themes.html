@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2048 Theme Selection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #faf8ef;
+            --bg-dark: #12181b;
+            --text-light: #776e65;
+            --text-dark: #f9f6f2;
+            --title-color: #776e65;
+            --btn-normal: #8f7a66;
+            --btn-hover: #6e5849;
+            --btn-text: #f9f6f2;
+            --transition-fast: 0.2s;
+            --transition-medium: 0.4s;
+            --transition-slow: 0.6s;
+            --easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Rubik', sans-serif;
+            touch-action: manipulation;
+            overflow-x: hidden;
+            padding: 20px;
+            transition: background-color 0.5s var(--easing);
+        }
+
+        body.dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .title {
+            font-size: clamp(3rem, 10vw, 4rem);
+            font-weight: bold;
+            color: #776e65;
+            margin: 1rem 0 0.5rem;
+            transition: all var(--transition-slow) var(--easing);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            cursor: pointer;
+        }
+
+        body.dark .title {
+            color: #776e65;
+        }
+
+        .subtitle {
+            font-size: clamp(2rem, 6vw, 2.5rem);
+            font-weight: 700;
+            color: var(--title-color);
+            margin-bottom: 2rem;
+            transition: all var(--transition-slow) var(--easing);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            animation-delay: 0.2s;
+        }
+
+        body.dark .subtitle {
+            color: var(--text-dark);
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 0 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: all var(--transition-medium) var(--easing);
+        }
+
+        .menu.hide {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+
+        .btn {
+            width: 100%;
+            max-width: 280px;
+            background: var(--btn-normal);
+            color: var(--btn-text);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(1.1rem, 3.5vw, 1.3rem);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all var(--transition-fast) var(--easing);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            position: relative;
+        }
+
+        .btn:hover {
+            background: var(--btn-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn:nth-child(1) { animation-delay: 0.3s; }
+        .btn:nth-child(2) { animation-delay: 0.4s; }
+        .btn:nth-child(3) { animation-delay: 0.5s; }
+
+        .tooltip {
+            visibility: hidden;
+            background-color: #555;
+            color: #fff;
+            font-family: 'Rubik', sans-serif;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 8px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity var(--transition-fast) var(--easing);
+        }
+
+        .btn:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-light);
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            animation-delay: 0.6s;
+        }
+
+        body.dark .footer {
+            color: var(--text-dark);
+        }
+
+        .back-link {
+            color: var(--btn-normal);
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all var(--transition-fast) var(--easing);
+        }
+
+        body.dark .back-link {
+            color: var(--btn-hover);
+        }
+
+        .back-link:hover {
+            color: var(--btn-hover);
+            transform: translateY(-1px);
+        }
+
+        body.dark .back-link:hover {
+            color: var(--btn-normal);
+        }
+
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-light);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-medium) var(--easing);
+        }
+
+        body.dark .page-transition {
+            background-color: var(--bg-dark);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .menu {
+                max-width: 300px;
+            }
+            .btn {
+                font-size: clamp(1rem, 3vw, 1.1rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            .title {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+            }
+            .subtitle {
+                font-size: clamp(1.2rem, 4vw, 1.5rem);
+                margin-bottom: 1rem;
+            }
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: clamp(1rem, 3vw, 1.1rem);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title" onclick="toggleTheme()">2048</h1>
+    <h2 class="subtitle">Select Theme</h2>
+    
+    <div class="menu">
+        <!-- <button class="btn" onclick="startTransition('emoji.html')">
+            Emojis
+            <span class="tooltip">Play with emoji-themed tiles</span>
+        </button> -->
+        <button class="btn" onclick="startTransition('fruits.html')">
+            Fruits
+            <span class="tooltip">Play with fruit-themed tiles</span>
+        </button>
+        <!-- <button class="btn" onclick="startTransition('rkspecial.html')">
+            RK Special
+            <span class="tooltip">Play with RK's special-themed tiles</span>
+        </button> -->
+    </div>
+    <div class="footer">
+        <span class="back-link" onclick="startTransition('index.html')">BACK TO MENU</span>
+    </div>
+
+    <script>
+        // Theme toggle function (light/dark)
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('darkTheme', document.body.classList.contains('dark'));
+        }
+
+        // Page transition function
+        function startTransition(destination) {
+            const title = document.querySelector('.title');
+            const menu = document.querySelector('.menu');
+            const transition = document.createElement('div');
+            transition.className = 'page-transition';
+            document.body.appendChild(transition);
+            
+            title.style.opacity = '0';
+            title.style.transform = 'scale(0)';
+            menu.classList.add('hide');
+            
+            setTimeout(() => {
+                transition.style.opacity = '1';
+                setTimeout(() => {
+                    window.location.href = destination;
+                }, 400);
+            }, 600);
+        }
+
+        // Apply saved theme (light/dark)
+        if (localStorage.getItem('darkTheme') === 'true') {
+            document.body.classList.add('dark');
+        }
+    </script>
+</body>
+</html>

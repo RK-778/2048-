@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2048 High Scores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #faf8ef;
+            --bg-dark: #12181b;
+            --text-light: #776e65;
+            --text-dark: #f9f6f2;
+            --title-color: #776e65;
+            --btn-normal: #8f7a66;
+            --btn-hover: #6e5849;
+            --btn-text: #f9f6f2;
+            --table-header: #bbada0;
+            --table-row-odd: #eee4da;
+            --table-row-even: #ede0c8;
+            --table-row-dark-odd: #2d3748;
+            --table-row-dark-even: #3a4658;
+            --transition-fast: 0.2s;
+            --transition-medium: 0.4s;
+            --transition-slow: 0.6s;
+            --easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Rubik', sans-serif;
+            touch-action: manipulation;
+            overflow-x: hidden;
+            padding: 20px;
+            transition: background-color 0.5s var(--easing);
+        }
+
+        body.dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .title {
+            font-size: clamp(3rem, 10vw, 4rem);
+            font-weight: bold;
+            color: #776e65;
+            margin: 1rem 0 0.5rem;
+            transition: all var(--transition-slow) var(--easing);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .title:hover {
+            transform: scale(1.05);
+        }
+
+        .title::after {
+            content: "";
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            opacity: 0.7;
+            transition: all var(--transition-fast) var(--easing);
+        }
+
+        body.dark .title::after {
+            content: "";
+        }
+
+        body.dark .title {
+            color: #f9f6f2;
+        }
+
+        .subtitle {
+            font-size: clamp(2rem, 6vw, 2.5rem);
+            font-weight: 700;
+            color: var(--title-color);
+            margin-bottom: 2rem;
+            transition: all var(--transition-slow) var(--easing);
+            opacity: 0;
+            animation: fadeIn var(--transition-slow) var(--easing) forwards;
+            animation-delay: 0.2s;
+        }
+
+        body.dark .subtitle {
+            color: var(--text-dark);
+        }
+
+        .scores-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn var(--transition-medium) var(--easing) forwards;
+        }
+
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-table th {
+            background-color: var(--table-header);
+            color: var(--btn-text);
+            padding: 12px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .score-table td {
+            padding: 12px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .score-table tr:nth-child(odd) {
+            background-color: var(--table-row-odd);
+        }
+
+        .score-table tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+
+        body.dark .score-table tr:nth-child(odd) {
+            background-color: var(--table-row-dark-odd);
+        }
+
+        body.dark .score-table tr:nth-child(even) {
+            background-color: var(--table-row-dark-even);
+        }
+
+        .rank {
+            font-weight: bold;
+            width: 50px;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #edc22e;
+        }
+
+        body.dark .score {
+            color: #f2b179;
+        }
+
+        .username {
+            text-transform: capitalize;
+        }
+
+        .date {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .no-scores {
+            margin: 2rem 0;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .score-table th, .score-table td {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+            
+            .date {
+                font-size: 0.7rem;
+            }
+            
+            .title::after {
+                right: -35px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .title {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+            }
+            .subtitle {
+                font-size: clamp(1.2rem, 4vw, 1.5rem);
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">2048</h1>
+    <h2 class="subtitle">High Scores</h2>
+    
+    <div class="scores-container">
+        <table class="score-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="scores-table">
+                <!-- Scores will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Sample high scores data - in a real app, this would come from a server/database
+        const highScores = [
+            { username: "Raghavendra", score: 40768, date: "2025-07-29", isRegistered: true },
+            { username: "Raghavendra", score: 40768, date: "2025-07-29", isRegistered: true },
+            { username: "RK", score: 39222, date: "2025-07-29", isRegistered: true },
+            { username: "Anonymous", score: 38510, date: "2025-07-28", isRegistered: false },
+            { username: "Anonymous", score: 38510, date: "2025-07-28", isRegistered: false },
+            { username: "Anonymous", score: 35548, date: "2025-07-25", isRegistered: true },
+            { username: "RK", score: 32320, date: "2025-07-25", isRegistered: true },
+            { username: "Anonymous", score: 28320, date: "2025-07-24", isRegistered: false },
+            { username: "Anonymous", score: 26598, date: "2025-07-23", isRegistered: false },
+            { username: "RK", score: 25720, date: "2025-07-23", isRegistered: true }
+        ];
+
+        // Function to display high scores
+        function displayHighScores() {
+            const tableBody = document.getElementById('scores-table');
+            tableBody.innerHTML = '';
+
+            if (highScores.length === 0) {
+                const noScoresRow = document.createElement('tr');
+                noScoresRow.innerHTML = `<td colspan="4" class="no-scores">No high scores yet - be the first!</td>`;
+                tableBody.appendChild(noScoresRow);
+                return;
+            }
+
+            highScores.forEach((score, index) => {
+                const row = document.createElement('tr');
+                
+                // Format the date
+                const formattedDate = new Date(score.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                // Display "Anonymous" for unregistered users
+                const displayName = score.isRegistered ? score.username : 'Anonymous';
+                
+                row.innerHTML = `
+                    <td class="rank">${index + 1}</td>
+                    <td class="username">${displayName}</td>
+                    <td class="score">${score.score.toLocaleString()}</td>
+                    <td class="date">${formattedDate}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Toggle dark/light theme
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark');
+            
+            // Save preference to localStorage
+            const isDark = body.classList.contains('dark');
+            localStorage.setItem('darkTheme', isDark);
+        }
+
+        // Apply saved theme
+        function applySavedTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const savedTheme = localStorage.getItem('darkTheme');
+            
+            // Use saved theme if available, otherwise use system preference
+            if (savedTheme === 'true' || (savedTheme === null && prefersDark)) {
+                document.body.classList.add('dark');
+            }
+        }
+
+        // Initialize
+        function init() {
+            applySavedTheme();
+            displayHighScores();
+            
+            // Add click event to title for theme toggle
+            const title = document.querySelector('.title');
+            title.addEventListener('click', toggleTheme);
+        }
+
+        // Start when page loads
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>2048 Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-light: #faf8ef;
+  --bg-dark: #12181b;
+  --text-light: #776e65;
+  --text-dark: #f9f6f2;
+  --title-color: #776e65;
+  --grid-bg-light: #bbada0;
+  --grid-bg-dark: #3e2621;
+  --cell-bg-light: #cdc1b4;
+  --btn-normal: #8f7a66;
+  --btn-hover: #6e5849;
+  --btn-text: #f9f6f2;
+  --btn-disabled: #a9a9a9;
+  --lock-color-light: #5c4033;
+  --lock-color-dark: #6e5849;
+  --selected-tile: rgba(255, 255, 255, 0.5);
+  --transition-fast: 0.2s;
+  --transition-medium: 0.3s;
+  --transition-slow: 0.4s;
+  --easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  font-family: 'Rubik', sans-serif;
+  touch-action: manipulation;
+  transition: background-color var(--transition-medium) var(--easing);
+  overflow-y: auto;
+}
+
+body.dark {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.container {
+  display: block;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  font-size: clamp(2.2rem, 9vw, 2.8rem);
+  font-weight: bold;
+  color: var(--title-color);
+  cursor: pointer;
+  margin: 0.8rem 0;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn var(--transition-slow) var(--easing) forwards;
+  animation-delay: 0.1s;
+  text-align: center;
+}
+
+.scores {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  margin: 0.8rem 0;
+  width: 100%;
+  opacity: 0;
+  animation: fadeIn var(--transition-slow) var(--easing) forwards;
+  animation-delay: 0.2s;
+}
+
+.score-container {
+  width: 90px;
+  height: 60px;
+  background: var(--btn-normal);
+  border-radius: 8px;
+  color: var(--btn-text);
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+}
+
+body.dark .score-container {
+  background: var(--btn-hover);
+}
+
+.score-title {
+  font-size: clamp(0.6rem, 2.2vw, 0.7rem);
+  display: block;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.score-value {
+  font-size: clamp(0.9rem, 3.5vw, 1rem);
+}
+
+.game-container {
+  width: min(100%, 550px);
+  height: min(100%, 550px);
+  padding: 10px;
+  background-color: var(--grid-bg-light);
+  border-radius: 8px;
+  margin: 0.8rem auto;
+  position: relative;
+  opacity: 0;
+  animation: fadeIn var(--transition-slow) var(--easing) forwards;
+  animation-delay: 0.3s;
+}
+
+body.dark .game-container {
+  background-color: var(--grid-bg-dark);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  transition: transform var(--transition-medium) var(--easing);
+}
+
+.cell {
+  background-color: var(--cell-bg-light);
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(1.6rem, 7vw, 2.5rem);
+  font-weight: bold;
+  color: #776e65;
+  transition: all var(--transition-fast) var(--easing);
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+}
+
+.cell.selected {
+  background-color: var(--selected-tile);
+  outline: 2px solid #ff4040;
+  z-index: 10;
+}
+
+.tile-2 { background-color: #f2b179; color: #f9f6f2; }
+.tile-4 { background-color: #f59563; color: #f9f6f2; }
+.tile-8 { background-color: #f67c5f; color: #f9f6f2; }
+.tile-16 { background-color: #f65e3b; color: #f9f6f2; }
+.tile-32 { background-color: #ff4040; color: #f9f6f2; }
+.tile-64 { background-color: #cc0000; color: #f9f6f2; }
+.tile-128 { background-color: #edcf72; color: #f9f6f2; }
+.tile-256 { background-color: #edcc61; color: #f9f6f2; }
+.tile-512 { background-color: #edc850; color: #f9f6f2; }
+.tile-1024 { background-color: #edc53f; color: #f9f6f2; }
+.tile-2048 { background-color: #edc22e; color: #f9f6f2; }
+
+.shatter {
+  animation: shatter 0.5s forwards;
+  pointer-events: none;
+}
+.credit {
+        position: fixed;
+        bottom: 15px;
+        width: 100%;
+        text-align: center;
+        font-size: clamp(0.8rem, 2.5vw, 1rem);
+        color: var(--text-light);
+        font-weight: 500;
+        pointer-events: none;
+        opacity: 1;
+        transition: color 0.3s ease;
+    }
+
+    body.dark .credit {
+        color: #776e65;
+    }
+@keyframes shatter {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  20% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  }
+}
+
+@keyframes rotateBoard {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(180deg); }
+}
+
+.game-over {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(238, 228, 218, 0.85);
+  border-radius: 8px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  animation: fadeIn var(--transition-medium) var(--easing) forwards;
+}
+
+body.dark .game-over {
+  background-color: rgba(62, 38, 26, 0.9);
+}
+
+.game-over-text {
+  font-size: clamp(2rem, 7vw, 2.5rem);
+  font-weight: bold;
+  color: var(--title-color);
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+  animation: pulse 2s var(--easing) infinite;
+}
+
+.options {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  margin: 0.8rem 0;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeIn var(--transition-slow) var(--easing) forwards;
+  animation-delay: 0.4s;
+}
+
+.btn {
+  background: var(--btn-normal);
+  color: var(--btn-text);
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: none;
+  font-family: 'Rubik', sans-serif;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--easing);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 48px;
+  width: 60px;
+  height: 50px;
+}
+
+.btn.active {
+  background: var(--btn-hover);
+  transform: scale(1.05);
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--btn-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn:disabled {
+  background: var(--btn-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+.power-icon {
+  width: clamp(18px, 4.5vw, 22px);
+  height: clamp(18px, 4.5vw, 22px);
+  fill: var(--btn-text);
+  transition: all var(--transition-fast) var(--easing);
+  stroke-width: 2.5;
+}
+
+.btn:hover:not(:disabled) .power-icon {
+  transform: scale(1.1);
+}
+
+.power-bars {
+  display: flex;
+  gap: 3px;
+  position: absolute;
+  bottom: 3px;
+}
+
+.power-bar {
+  width: clamp(7px, 2vw, 9px);
+  height: 4px;
+  background: var(--btn-text);
+  border-radius: 2px;
+  transition: opacity var(--transition-fast) var(--easing);
+}
+
+.power-bar.used {
+  opacity: 0;
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  font-family: 'Rubik', sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 10px;
+  position: absolute;
+  z-index: 1000;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(0.8rem, 2.2vw, 0.9rem);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--transition-fast) var(--easing);
+}
+
+.btn:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.page-transition {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-light);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-medium) var(--easing);
+}
+
+body.dark .page-transition {
+  background-color: var(--bg-dark);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 15px; max-width: 500px; }
+  .title { font-size: clamp(2rem, 8vw, 2.4rem); margin: 0.6rem 0; }
+  .game-container { width: min(100%, 450px); height: min(100%, 450px); margin: 0.6rem auto; padding: 8px; }
+  .scores { margin: 0.6rem 0; gap: 3px; }
+  .options { margin: 0.6rem 0; gap: 4px; }
+  .score-container { padding: 0.3rem 0.4rem; }
+  .score-title { font-size: clamp(0.5rem, 2vw, 0.6rem); }
+  .score-value { font-size: clamp(0.8rem, 3vw, 0.9rem); }
+  .btn { padding: 0.4rem; font-size: clamp(0.8rem, 2.2vw, 0.9rem); width: 50px; height: 42px; }
+  .cell { font-size: clamp(1.4rem, 6vw, 2rem); }
+  .power-icon { width: clamp(16px, 4vw, 20px); height: clamp(16px, 4vw, 20px); }
+  .power-bar { width: clamp(6px, 1.8vw, 8px); height: 3px; }
+  .tooltip { font-size: clamp(0.7rem, 2vw, 0.8rem); }
+  .game-over-text { font-size: clamp(1.8rem, 6vw, 2rem); margin-bottom: 0.8rem; }
+  .grid { gap: 8px; }
+}
+
+@media (max-width: 400px) {
+  .container { padding: 10px; max-width: 400px; }
+  .game-container { width: min(100%, 360px); height: min(100%, 360px); padding: 6px; }
+  .scores { gap: 2px; margin: 0.4rem 0; }
+  .options { gap: 3px; margin: 0.4rem 0; }
+  .btn { padding: 0.3rem; font-size: clamp(0.7rem, 2vw, 0.8rem); width: 45px; height: 38px; }
+  .score-container { padding: 0.2rem 0.3rem; }
+  .power-icon { width: clamp(14px, 3.5vw, 18px); height: clamp(14px, 3.5vw, 18px); }
+  .power-bar { width: clamp(5px, 1.5vw, 7px); height: 2px; }
+  .tooltip { font-size: clamp(0.6rem, 1.8vw, 0.7rem); }
+  .cell { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+  .grid { gap: 6px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1 class="title" onclick="toggleTheme()">2048</h1>
+
+<div class="scores">
+<div class="score-container">
+<span class="score-title">SCORE</span>
+<span class="score-value" id="score">0</span>
+</div>
+<button class="btn" id="new-game-btn">NEW GAME</button>
+<div class="score-container">
+<span class="score-title">BEST</span>
+<span class="score-value" id="best-score">0</span>
+</div>
+</div>
+
+<div class="game-container">
+<div class="grid" id="grid"></div>
+<div class="game-over" id="game-over">
+<div class="game-over-text">GAME OVER!</div>
+<button class="btn" id="try-again-btn">TRY AGAIN</button>
+</div>
+</div>
+
+<div class="options">
+<button class="btn" id="undo-btn">
+<div class="btn-container">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-undo2-icon lucide-undo-2"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
+<div class="power-bars">
+<div class="power-bar" id="undo-bar-1"></div>
+<div class="power-bar" id="undo-bar-2"></div>
+<div class="power-bar" id="undo-bar-3"></div>
+</div>
+<span class="tooltip" id="undo-tooltip">UNDO LAST MOVE (3 USES)</span>
+</div>
+</button>
+<button class="btn" id="swap-tiles-btn">
+<div class="btn-container">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-replace-icon lucide-replace"><path d="M14 4a2 2 0 0 1 2-2"/><path d="M16 10a2 2 0 0 1-2-2"/><path d="M20 2a2 2 0 0 1 2 2"/><path d="M22 8a2 2 0 0 1-2 2"/><path d="m3 7 3 3 3-3"/><path d="M6 10V5a3 3 0 0 1 3-3h1"/><rect x="2" y="14" width="8" height="8" rx="2"/></svg>
+<div class="power-bars">
+<div class="power-bar" id="swap-bar-1"></div>
+<div class="power-bar" id="swap-bar-2"></div>
+</div>
+<span class="tooltip" id="swap-tooltip">SWAP TWO TILES (2 USES)</span>
+</div>
+</button>
+<button class="btn" id="shuffle-btn">
+<div class="btn-container">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shuffle-icon lucide-shuffle"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22"/><path d="M2 6h1.972a4 4 0 0 1 3.6 2.2"/><path d="M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45"/></svg>
+<div class="power-bars">
+<div class="power-bar" id="shuffle-bar-1"></div>
+</div>
+<span class="tooltip" id="shuffle-tooltip">SHUFFLE ALL TILES (1 USE)</span>
+</div>
+</button>
+<button class="btn" id="bomb-btn">
+<div class="btn-container">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bomb-icon lucide-bomb"><circle cx="11" cy="13" r="9"/><path d="M14.35 4.65 16.3 2.7a2.41 2.41 0 0 1 3.4 0l1.6 1.6a2.4 2.4 0 0 1 0 3.4l-1.95 1.95"/><path d="m22 2-1.5 1.5"/></svg>
+<div class="power-bars">
+<div class="power-bar" id="bomb-bar-1"></div>
+</div>
+<span class="tooltip" id="bomb-tooltip">BOMB ONE TILE (1 USE)</span>
+</div>
+</button>
+<button class="btn" id="rotate-btn">
+<div class="btn-container">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw-icon lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+<div class="power-bars">
+<div class="power-bar" id="rotate-bar-1"></div>
+</div>
+<span class="tooltip" id="rotate-tooltip">ROTATE BOARD 180° (1 USE)</span>
+</div>
+</button>
+</div>
+</div>
+
+<script>
+const grid = document.getElementById('grid');
+const scoreDisplay = document.getElementById('score');
+const bestScoreDisplay = document.getElementById('best-score');
+const gameOverScreen = document.getElementById('game-over');
+const newGameBtn = document.getElementById('new-game-btn');
+const tryAgainBtn = document.getElementById('try-again-btn');
+const undoBtn = document.getElementById('undo-btn');
+const swapTilesBtn = document.getElementById('swap-tiles-btn');
+const shuffleBtn = document.getElementById('shuffle-btn');
+const bombBtn = document.getElementById('bomb-btn');
+const rotateBtn = document.getElementById('rotate-btn');
+const undoBar1 = document.getElementById('undo-bar-1');
+const undoBar2 = document.getElementById('undo-bar-2');
+const undoBar3 = document.getElementById('undo-bar-3');
+const swapBar1 = document.getElementById('swap-bar-1');
+const swapBar2 = document.getElementById('swap-bar-2');
+const shuffleBar1 = document.getElementById('shuffle-bar-1');
+const bombBar1 = document.getElementById('bomb-bar-1');
+const rotateBar1 = document.getElementById('rotate-bar-1');
+const undoTooltip = document.getElementById('undo-tooltip');
+const swapTooltip = document.getElementById('swap-tooltip');
+const shuffleTooltip = document.getElementById('shuffle-tooltip');
+const bombTooltip = document.getElementById('bomb-tooltip');
+const rotateTooltip = document.getElementById('rotate-tooltip');
+const gameContainer = document.querySelector('.game-container');
+const title = document.querySelector('.title');
+const container = document.querySelector('.container');
+let board = [];
+let score = 0;
+let bestScore = localStorage.getItem('bestScore') || 0;
+let undoCount = 0;
+let swapCount = 0;
+let shuffleCount = 0;
+let bombCount = 0;
+let rotateCount = 0;
+const maxUndos = 3;
+const maxSwaps = 2;
+const maxShuffles = 1;
+const maxBombs = 1;
+const maxRotates = 1;
+let swapMode = false;
+let bombMode = false;
+let selectedTiles = [];
+let moveHistory = [];
+let has256Tile = false;
+let has1024Tile = false;
+bestScoreDisplay.textContent = bestScore;
+
+function initGame() {
+  board = [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0]
+  ];
+  score = 0;
+  undoCount = 0;
+  swapCount = 0;
+  shuffleCount = 0;
+  bombCount = 0;
+  rotateCount = 0;
+  swapMode = false;
+  bombMode = false;
+  moveHistory = [];
+  selectedTiles = [];
+  has256Tile = false;
+  has1024Tile = false;
+  undoBtn.disabled = false;
+  swapTilesBtn.disabled = true;
+  shuffleBtn.disabled = true;
+  bombBtn.disabled = true;
+  rotateBtn.disabled = true;
+  swapTilesBtn.classList.remove('active');
+  bombBtn.classList.remove('active');
+  undoBar1.classList.remove('used');
+  undoBar2.classList.remove('used');
+  undoBar3.classList.remove('used');
+  swapBar1.classList.remove('used');
+  swapBar2.classList.remove('used');
+  shuffleBar1.classList.remove('used');
+  bombBar1.classList.remove('used');
+  rotateBar1.classList.remove('used');
+  scoreDisplay.textContent = score;
+  gameOverScreen.style.display = 'none';
+  createGrid();
+  addNewTile();
+  addNewTile();
+  updateGrid();
+}
+
+function createGrid() {
+  grid.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.dataset.row = i;
+      cell.dataset.col = j;
+      cell.addEventListener('click', handleTileClick);
+      cell.addEventListener('touchstart', handleTileClick, { passive: true });
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function addNewTile() {
+  const emptyCells = [];
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      if (board[i][j] === 0) {
+        emptyCells.push({ row: i, col: j });
+      }
+    }
+  }
+  if (emptyCells.length > 0) {
+    const { row, col } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    board[row][col] = Math.random() < 0.9 ? 2 : 4;
+  }
+}
+
+function updateGrid() {
+  const cells = grid.children;
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      const cell = cells[i * 4 + j];
+      const value = board[i][j];
+      cell.className = 'cell';
+      if (value > 0) {
+        cell.classList.add(`tile-${value}`);
+        cell.textContent = value;
+        if (value >= 256 && !has256Tile) {
+          has256Tile = true;
+          swapTilesBtn.disabled = false;
+          shuffleBtn.disabled = false;
+        }
+        if (value >= 1024 && !has1024Tile) {
+          has1024Tile = true;
+          bombBtn.disabled = false;
+          rotateBtn.disabled = false;
+        }
+      } else {
+        cell.textContent = '';
+      }
+      if (!selectedTiles.some(tile => tile.row === i && tile.col === j)) {
+        cell.classList.remove('selected');
+      }
+    }
+  }
+  scoreDisplay.textContent = score;
+  if (score > bestScore) {
+    bestScore = score;
+    bestScoreDisplay.textContent = bestScore;
+    localStorage.setItem('bestScore', bestScore);
+  }
+  undoBtn.disabled = undoCount >= maxUndos;
+  swapTilesBtn.disabled = swapCount >= maxSwaps || !has256Tile;
+  shuffleBtn.disabled = shuffleCount >= maxShuffles || !has256Tile;
+  bombBtn.disabled = bombCount >= maxBombs || !has1024Tile;
+  rotateBtn.disabled = rotateCount >= maxRotates || !has1024Tile;
+  undoBar1.classList.toggle('used', undoCount >= 1);
+  undoBar2.classList.toggle('used', undoCount >= 2);
+  undoBar3.classList.toggle('used', undoCount >= 3);
+  swapBar1.classList.toggle('used', swapCount >= 1);
+  swapBar2.classList.toggle('used', swapCount >= 2);
+  shuffleBar1.classList.toggle('used', shuffleCount >= 1);
+  bombBar1.classList.toggle('used', bombCount >= 1);
+  rotateBar1.classList.toggle('used', rotateCount >= 1);
+  undoTooltip.textContent = `UNDO LAST MOVE (${maxUndos - undoCount} USES)`;
+  swapTooltip.textContent = has256Tile ? `SWAP TWO TILES (${maxSwaps - swapCount} USES)` : `SWAP TWO TILES (UNLOCK AT 256)`;
+  shuffleTooltip.textContent = has256Tile ? `SHUFFLE ALL TILES (${maxShuffles - shuffleCount} USES)` : `SHUFFLE ALL TILES (UNLOCK AT 256)`;
+  bombTooltip.textContent = has1024Tile ? `BOMB ONE TILE (${maxBombs - bombCount} USES)` : `BOMB ONE TILE (UNLOCK AT 1024)`;
+  rotateTooltip.textContent = has1024Tile ? `ROTATE BOARD 180° (${maxRotates - rotateCount} USES)` : `ROTATE BOARD 180° (UNLOCK AT 1024)`;
+}
+
+function handleTileClick(e) {
+  if (gameOverScreen.style.display === 'flex') return;
+  const cell = e.target;
+  const row = parseInt(cell.dataset.row);
+  const col = parseInt(cell.dataset.col);
+
+  if (swapMode && swapCount < maxSwaps && has256Tile) {
+    if (board[row][col] === 0 && selectedTiles.length === 0) return;
+    if (!selectedTiles.some(tile => tile.row === row && tile.col === col)) {
+      cell.classList.add('selected');
+      selectedTiles.push({ row, col });
+    }
+    if (selectedTiles.length === 2) {
+      saveBoardState();
+      swapTiles();
+      selectedTiles = [];
+      swapCount++;
+      swapMode = false;
+      swapTilesBtn.classList.remove('active');
+      updateGrid();
+      checkGameOver();
+    }
+  } else if (bombMode && bombCount < maxBombs && has1024Tile) {
+    if (board[row][col] !== 0) {
+      saveBoardState();
+      cell.classList.add('selected', 'shatter');
+      selectedTiles.push({ row, col });
+      setTimeout(() => {
+        bombTile();
+        selectedTiles = [];
+        bombCount++;
+        bombMode = false;
+        bombBtn.classList.remove('active');
+        updateGrid();
+        checkGameOver();
+      }, 500);
+    }
+  }
+}
+
+function saveBoardState() {
+  const boardCopy = board.map(row => [...row]);
+  moveHistory.push({ board: boardCopy, score });
+  if (moveHistory.length > 1) {
+    moveHistory.shift();
+  }
+}
+
+function undoMove() {
+  if (undoCount >= maxUndos || moveHistory.length === 0) return;
+  const lastState = moveHistory.pop();
+  board = lastState.board;
+  score = lastState.score;
+  undoCount++;
+  updateGrid();
+}
+
+function swapTiles() {
+  const [tile1, tile2] = selectedTiles;
+  const temp = board[tile1.row][tile1.col];
+  board[tile1.row][tile1.col] = board[tile2.row][tile2.col];
+  board[tile2.row][tile2.col] = temp;
+}
+
+function shuffleBoard() {
+  if (shuffleCount >= maxShuffles || !has256Tile) return;
+  saveBoardState();
+  const tiles = [];
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      if (board[i][j] !== 0) {
+        tiles.push(board[i][j]);
+      }
+    }
+  }
+  tiles.sort(() => Math.random() - 0.5);
+  let tileIndex = 0;
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      board[i][j] = tileIndex < tiles.length ? tiles[tileIndex++] : 0;
+    }
+  }
+  shuffleCount++;
+  updateGrid();
+  checkGameOver();
+}
+
+function bombTile() {
+  const [tile] = selectedTiles;
+  board[tile.row][tile.col] = 0;
+  addNewTile();
+}
+
+function rotateBoard180() {
+  if (rotateCount >= maxRotates || !has1024Tile) return;
+  saveBoardState();
+  grid.style.animation = 'rotateBoard 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+  const newBoard = [[], [], [], []];
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      newBoard[3 - i][3 - j] = board[i][j];
+    }
+  }
+  board = newBoard;
+  rotateCount++;
+  setTimeout(() => {
+    grid.style.animation = '';
+    updateGrid();
+    checkGameOver();
+  }, 500);
+}
+
+function moveLeft() {
+  let moved = false;
+  for (let i = 0; i < 4; i++) {
+    let row = board[i].filter(val => val !== 0);
+    for (let j = 0; j < row.length - 1; j++) {
+      if (row[j] === row[j + 1]) {
+        row[j] *= 2;
+        score += row[j];
+        row[j + 1] = 0;
+        moved = true;
+      }
+    }
+    row = row.filter(val => val !== 0);
+    while (row.length < 4) row.push(0);
+    if (board[i].join() !== row.join()) moved = true;
+    board[i] = row;
+  }
+  return moved;
+}
+
+function rotateBoard() {
+  const newBoard = [[], [], [], []];
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      newBoard[i][j] = board[3 - j][i];
+    }
+  }
+  board = newBoard;
+}
+
+function move(direction) {
+  saveBoardState();
+  let moved = false;
+  for (let i = 0; i < direction; i++) rotateBoard();
+  moved = moveLeft();
+  for (let i = 0; i < (4 - direction) % 4; i++) rotateBoard();
+  if (moved) {
+    addNewTile();
+    updateGrid();
+    checkGameOver();
+  }
+}
+
+function checkGameOver() {
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      if (board[i][j] === 0) return;
+      if (j < 3 && board[i][j] === board[i][j + 1]) return;
+      if (i < 3 && board[i][j] === board[i + 1][j]) return;
+    }
+  }
+  gameOverScreen.style.display = 'flex';
+}
+
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
+function handleTouchStart(e) {
+  if (gameOverScreen.style.display === 'flex' || swapMode || bombMode) return;
+  e.preventDefault();
+  touchStartX = e.changedTouches[0].screenX;
+  touchStartY = e.changedTouches[0].screenY;
+}
+
+function handleTouchEnd(e) {
+  if (gameOverScreen.style.display === 'flex' || swapMode || bombMode) return;
+  e.preventDefault();
+  touchEndX = e.changedTouches[0].screenX;
+  touchEndY = e.changedTouches[0].screenY;
+  handleSwipe();
+}
+
+function handleSwipe() {
+  const deltaX = touchEndX - touchStartX;
+  const deltaY = touchEndY - touchStartY;
+  const minSwipeDistance = 30;
+
+  if (Math.abs(deltaX) > Math.abs(deltaY)) {
+    if (deltaX > minSwipeDistance) {
+      move(2); // Right
+    } else if (deltaX < -minSwipeDistance) {
+      move(0); // Left
+    }
+  } else {
+    if (deltaY > minSwipeDistance) {
+      move(1); // Down
+    } else if (deltaY < -minSwipeDistance) {
+      move(3); // Up
+    }
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (gameOverScreen.style.display === 'flex') return;
+  switch (e.key) {
+    case 'ArrowUp': move(3); break;
+    case 'ArrowRight': move(2); break;
+    case 'ArrowDown': move(1); break;
+    case 'ArrowLeft': move(0); break;
+  }
+});
+
+gameContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
+gameContainer.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+newGameBtn.addEventListener('click', initGame);
+tryAgainBtn.addEventListener('click', initGame);
+undoBtn.addEventListener('click', () => {
+  if (undoCount < maxUndos) {
+    undoMove();
+  }
+});
+swapTilesBtn.addEventListener('click', () => {
+  if (swapCount < maxSwaps && has256Tile) {
+    swapMode = !swapMode;
+    bombMode = false;
+    swapTilesBtn.classList.toggle('active');
+    bombBtn.classList.remove('active');
+    selectedTiles = [];
+    grid.querySelectorAll('.cell').forEach(cell => {
+      cell.classList.remove('selected');
+    });
+  }
+});
+shuffleBtn.addEventListener('click', () => {
+  if (shuffleCount < maxShuffles && has256Tile) {
+    shuffleBoard();
+  }
+});
+bombBtn.addEventListener('click', () => {
+  if (bombCount < maxBombs && has1024Tile) {
+    bombMode = !bombMode;
+    swapMode = false;
+    bombBtn.classList.toggle('active');
+    swapTilesBtn.classList.remove('active');
+    selectedTiles = [];
+    grid.querySelectorAll('.cell').forEach(cell => {
+      cell.classList.remove('selected');
+    });
+  }
+});
+rotateBtn.addEventListener('click', () => {
+  if (rotateCount < maxRotates && has1024Tile) {
+    rotateBoard180();
+  }
+});
+
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('darkTheme', document.body.classList.contains('dark'));
+}
+
+window.onload = () => {
+  const transition = document.createElement('div');
+  transition.className = 'page-transition';
+  transition.style.opacity = '1';
+  document.body.appendChild(transition);
+
+  setTimeout(() => {
+    transition.style.opacity = '0';
+    setTimeout(() => {
+      transition.remove();
+      initGame();
+    }, 300);
+  }, 300);
+
+  if (localStorage.getItem('darkTheme') === 'true') {
+    document.body.classList.add('dark');
+  }
+};
+</script>
+<div class="credit">BUILT BY RK { 2025 } </div>
+</body>
+</html>
