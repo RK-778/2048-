@@ -56,13 +56,13 @@ body.dark {
   max-width: 100vw;
   min-height: 100vh;
   margin: 0 auto;
-  padding: clamp(10px, 2vw, 15px);
+  padding: clamp(10px, 2vw, 20px);
 }
 .title {
-  font-size: clamp(4rem, 14vw, 6rem);
+  font-size: clamp(4rem, 10vw, 7rem);
   font-weight: bold;
   color: var(--title-color);
-  margin: clamp(0.3rem, 1vw, 0.5rem) 0;
+  margin: clamp(0.5rem, 1.5vw, 1rem) 0;
   text-transform: uppercase;
   opacity: 0;
   transform: translateY(10px);
@@ -76,19 +76,19 @@ body.dark {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: clamp(10px, 3vw, 40px);
-  margin: clamp(0.3rem, 1vw, 0.5rem) 0;
+  gap: clamp(15px, 3vw, 50px);
+  margin: clamp(0.5rem, 1.5vw, 1rem) 0;
   width: 100%;
-  max-width: 600px;
+  max-width: 1200px;
   opacity: 0;
   animation: fadeIn var(--transition-slow) var(--easing) forwards;
   animation-delay: 0.2s;
 }
 .score-container {
-  width: clamp(70px, 15vw, 90px);
-  height: clamp(50px, 10vw, 60px);
+  width: clamp(100px, 20vw, 140px);
+  height: clamp(70px, 12vw, 90px);
   background: var(--btn-normal);
-  border-radius: 6px;
+  border-radius: 8px;
   color: var(--btn-text);
   font-weight: bold;
   text-align: center;
@@ -96,18 +96,25 @@ body.dark {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  font-size: clamp(1rem, 3vw, 1.5rem);
 }
 body.dark .score-container { background: var(--btn-hover); }
-.score-title { font-size: clamp(0.5rem, 2vw, 0.7rem); text-transform: uppercase; }
-.score-value { font-size: clamp(0.8rem, 3vw, 1.1rem); }
+.score-title { 
+  font-size: clamp(0.7rem, 2.2vw, 0.9rem); 
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+.score-value { 
+  font-size: clamp(1.2rem, 3.5vw, 1.8rem); 
+  font-weight: 700;
+}
 .game-container {
-  width: min(95vw, 1200px); /* Increased max-width from 600px to 800px */
+  width: min(90vw, 90vh, 1200px);
   aspect-ratio: 1 / 1;
-  padding: clamp(6px, 1.5vw, 10px);
+  padding: clamp(10px, 2vw, 20px);
   background-color: var(--grid-bg-light);
-  border-radius: 8px;
-  margin: clamp(0.3rem, 1vw, 0.5rem) auto;
+  border-radius: 12px;
+  margin: clamp(0.5rem, 1.5vw, 1.5rem) auto;
   position: relative;
   opacity: 0;
   animation: fadeIn var(--transition-slow) var(--easing) forwards;
@@ -118,18 +125,18 @@ body.dark .game-container { background-color: var(--grid-bg-dark); }
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  gap: clamp(5px, 1.5vw, 8px);
+  gap: clamp(8px, 1.8vw, 15px);
   width: 100%;
   height: 100%;
   transition: transform var(--transition-medium) var(--easing);
 }
 .cell {
   background-color: var(--cell-bg-light);
-  border-radius: 4px;
+  border-radius: 6px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: clamp(2.2rem, 8.5vw, 4rem);
+  font-size: clamp(2.5rem, 7vw, 5rem);
   font-weight: bold;
   color: #776e65;
   transition: all var(--transition-fast) var(--easing);
@@ -140,7 +147,7 @@ body.dark .game-container { background-color: var(--grid-bg-dark); }
 }
 .cell.selected {
   background-color: var(--selected-tile);
-  outline: 2px solid #ff4040;
+  outline: 3px solid #ff4040;
   z-index: 10;
 }
 .tile-2 { background-color: #f2b179; color: #f9f6f2; }
@@ -152,8 +159,16 @@ body.dark .game-container { background-color: var(--grid-bg-dark); }
 .tile-128 { background-color: #edcf72; color: #f9f6f2; }
 .tile-256 { background-color: #edcc61; color: #f9f6f2; }
 .tile-512 { background-color: #edc850; color: #f9f6f2; }
-.tile-1024 { background-color: #edc53f; color: #f9f6f2; }
-.tile-2048 { background-color: #edc22e; color: #f9f6f2; }
+.tile-1024 { 
+  background-color: #edc53f; 
+  color: #f9f6f2;
+  font-size: clamp(2rem, 6vw, 4rem);
+}
+.tile-2048 { 
+  background-color: #edc22e; 
+  color: #f9f6f2;
+  font-size: clamp(2rem, 6vw, 4rem);
+}
 .shatter { animation: shatter 0.5s forwards; pointer-events: none; }
 .credit {
   display: flex;
@@ -161,13 +176,13 @@ body.dark .game-container { background-color: var(--grid-bg-dark); }
   justify-content: center;
   width: 100%;
   text-align: center;
-  font-size: clamp(0.7rem, 2vw, 0.9rem);
+  font-size: clamp(0.8rem, 2.2vw, 1.1rem);
   color: var(--text-light);
   font-weight: 500;
   pointer-events: none;
   opacity: 1;
   transition: color 0.3s ease;
-  margin: clamp(0.3rem, 1vw, 0.5rem) 0;
+  margin: clamp(0.5rem, 1.5vw, 1rem) 0;
 }
 body.dark .credit { color: #776e65; }
 @keyframes shatter {
@@ -186,7 +201,7 @@ body.dark .credit { color: #776e65; }
   width: 100%;
   height: 100%;
   background-color: rgba(238, 228, 218, 0.85);
-  border-radius: 8px;
+  border-radius: 12px;
   display: none;
   flex-direction: column;
   align-items: center;
@@ -197,22 +212,22 @@ body.dark .credit { color: #776e65; }
 }
 body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
 .game-over-text {
-  font-size: clamp(1.8rem, 6vw, 2.5rem);
+  font-size: clamp(2.5rem, 8vw, 5rem);
   font-weight: bold;
   color: var(--title-color);
-  margin-bottom: clamp(0.6rem, 2vw, 1rem);
+  margin-bottom: clamp(1rem, 3vw, 2rem);
   text-transform: uppercase;
   animation: pulse 2s var(--easing) infinite;
 }
 
-/* REDUCE GAP BETWEEN BUTTONS */
+/* OPTIONS BUTTONS WITH TOOLTIPS ON TOP */
 .options {
   display: flex;
-  justify-content: space-between;
-  gap: clamp(2px, 0.5vw, 6px); /* REDUCED GAP */
+  justify-content: center;
+  gap: clamp(5px, 1vw, 10px);
   width: 100%;
-  max-width: 600px;
-  margin: clamp(0.3rem, 1vw, 0.5rem) 0;
+  max-width: 1200px;
+  margin: clamp(0.5rem, 1.5vw, 1.5rem) 0;
   flex-wrap: wrap;
   opacity: 0;
   animation: fadeIn var(--transition-slow) var(--easing) forwards;
@@ -221,11 +236,11 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
 .btn {
   background: var(--btn-normal);
   color: var(--btn-text);
-  padding: clamp(0.5rem, 1.5vw, 0.8rem);
-  border-radius: 8px;
+  padding: clamp(0.6rem, 1.5vw, 1rem);
+  border-radius: 10px;
   border: none;
   font-family: 'Rubik', sans-serif;
-  font-size: clamp(1rem, 3vw, 1.4rem);
+  font-size: clamp(1rem, 3vw, 1.6rem);
   font-weight: bold;
   text-transform: uppercase;
   cursor: pointer;
@@ -234,19 +249,20 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: clamp(60px, 14vw, 80px);
-  min-height: clamp(50px, 10vw, 70px);
+  min-width: clamp(70px, 16vw, 120px);
+  min-height: clamp(60px, 12vw, 100px);
 }
 #new-game-btn {
-  min-width: clamp(80px, 18vw, 100px);
-  min-height: clamp(60px, 12vw, 80px);
-  font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+  min-width: clamp(120px, 22vw, 180px);
+  min-height: clamp(80px, 15vw, 120px);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 700;
 }
 .btn.active { background: var(--btn-hover); transform: scale(1.05); }
 .btn:hover:not(:disabled) {
   background: var(--btn-hover);
   transform: translateY(-2px);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 .btn:disabled {
   background: var(--btn-disabled);
@@ -257,12 +273,13 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(2px, 0.5vw, 3px);
+  gap: clamp(3px, 0.8vw, 5px);
   width: 100%;
+  position: relative;
 }
 .power-icon {
-  width: clamp(22px, 6vw, 30px);
-  height: clamp(22px, 6vw, 30px);
+  width: clamp(24px, 6vw, 36px);
+  height: clamp(24px, 6vw, 36px);
   fill: var(--btn-text);
   transition: all var(--transition-fast) var(--easing);
   stroke-width: 2.5;
@@ -270,44 +287,53 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
 .btn:hover:not(:disabled) .power-icon { transform: scale(1.1); }
 .power-bars {
   display: flex;
-  gap: clamp(2px, 0.5vw, 3px);
+  gap: clamp(3px, 0.8vw, 5px);
   position: absolute;
-  bottom: clamp(2px, 0.5vw, 3px);
+  bottom: clamp(3px, 0.8vw, 5px);
 }
 .power-bar {
-  width: clamp(8px, 2.5vw, 12px);
-  height: clamp(4px, 0.8vw, 6px);
+  width: clamp(8px, 2.5vw, 14px);
+  height: clamp(4px, 1vw, 7px);
   background: var(--btn-text);
-  border-radius: 2px;
+  border-radius: 3px;
   transition: opacity var(--transition-fast) var(--easing);
 }
 .power-bar.used { opacity: 0; }
 
-/* TOOLTIP STYLES */
+/* TOOLTIP STYLES - POSITIONED ABOVE BUTTONS */
 .tooltip {
   visibility: hidden;
-  background-color: #555;
+  background-color: rgba(85, 85, 85, 0.9);
   color: #fff;
   font-family: 'Rubik', sans-serif;
-  text-transform: uppercase;
   text-align: center;
-  border-radius: 6px;
-  padding: clamp(5px, 1vw, 8px) clamp(8px, 2vw, 10px);
+  border-radius: 4px;
+  padding: 4px 8px;
   position: absolute;
   z-index: 1000;
-  bottom: 100%;
+  bottom: calc(100% + 5px);
   left: 50%;
   transform: translateX(-50%);
-  font-size: clamp(0.8rem, 2.2vw, 1rem);
+  font-size: 12px;
   white-space: nowrap;
   opacity: 0;
-  transition: opacity var(--transition-fast) var(--easing);
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  max-width: none;
+  width: auto;
 }
-.btn:hover .tooltip, .btn:focus .tooltip {
+.btn:hover .tooltip {
   visibility: visible;
   opacity: 1;
 }
-/* RESPONSIVE TOOLTIP FIXES FOR MOBILE EDGE OVERFLOW */
+@media (max-width: 768px) {
+  .tooltip {
+    font-size: 11px;
+    padding: 3px 6px;
+    bottom: calc(100% + 3px);
+  }
+}
+/* RESPONSIVE TOOLTIP FIXES */
 @media (max-width:700px) {
   .btn { position: relative; }
   .tooltip {
@@ -317,14 +343,15 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
     white-space: normal;
     min-width: 0;
     word-break: break-all;
-    top: 100%;
-    bottom: auto;
-    margin-top: 5px;
-    padding: 7px 8px;
-    font-size: 1rem;
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    font-size: 0.9rem;
   }
-  .options .btn:first-child .tooltip  { left: 0; transform: none; }
-  .options .btn:last-child .tooltip   { left: auto; right: 0; transform: none; }
+  .options .btn:first-child .tooltip  { left: 50%; transform: translateX(-50%); }
+  .options .btn:last-child .tooltip   { left: 50%; transform: translateX(-50%); }
 }
 .page-transition {
   position: fixed;
@@ -348,61 +375,145 @@ body.dark .page-transition { background-color: var(--bg-dark); }
   50% { transform: scale(1.05); }
 }
 
-/* -- responsive tweaks -- */
-@media (max-width: 900px) {
-  .container { padding: clamp(8px, 2vw, 12px); justify-content: space-around; }
-  .game-container { width: min(95vw, 500px); padding: clamp(5px, 1.2vw, 8px); }
-  .title { font-size: clamp(3.6rem, 12vw, 5rem); }
-  .scores { gap: clamp(8px, 2.5vw, 20px); max-width: 90vw; justify-content: space-between; }
-  .options { gap: clamp(2px, 0.5vw, 5px); max-width: 90vw; justify-content: space-between; }
-  .score-container { width: clamp(60px, 14vw, 80px); height: clamp(45px, 9vw, 55px); }
-  .score-title { font-size: clamp(0.5rem, 1.8vw, 0.6rem); }
-  .score-value { font-size: clamp(0.7rem, 2.5vw, 0.9rem); }
-  .btn { min-width: clamp(55px, 12vw, 70px); min-height: clamp(45px, 9vw, 60px); font-size: clamp(0.9rem, 2.5vw, 1.2rem); }
-  #new-game-btn { min-width: clamp(70px, 16vw, 90px); min-height: clamp(50px, 10vw, 70px); font-size: clamp(1rem, 3vw, 1.4rem); }
-  .cell { font-size: clamp(2rem, 7vw, 3.2rem); }
-  .power-icon { width: clamp(18px, 5vw, 26px); height: clamp(18px, 5vw, 26px); }
-  .power-bar { width: clamp(7px, 2vw, 10px); height: clamp(3px, 0.6vw, 4px); }
-  .tooltip { font-size: clamp(0.7rem, 1.8vw, 0.9rem); }
-  .game-over-text { font-size: clamp(1.6rem, 5.5vw, 2rem); }
-  .grid { gap: clamp(4px, 1.2vw, 6px); }
-  .credit { font-size: clamp(0.6rem, 1.8vw, 0.8rem); }
+/* -- LARGE SCREEN STYLES -- */
+@media (min-width: 1200px) {
+  .container {
+    padding: 20px;
+  }
+  .title {
+    font-size: 7rem;
+    margin: 1.5rem 0;
+  }
+  .scores {
+    gap: 40px;
+    margin: 1.5rem 0;
+  }
+  .score-container {
+    width: 160px;
+    height: 100px;
+    font-size: 1.8rem;
+  }
+  .score-title {
+    font-size: 1rem;
+  }
+  .score-value {
+    font-size: 2rem;
+  }
+  .game-container {
+    width: 800px;
+    padding: 20px;
+  }
+  .grid {
+    gap: 15px;
+  }
+  .cell {
+    font-size: 4.5rem;
+  }
+  .tile-1024, .tile-2048 {
+    font-size: 3.5rem;
+  }
+  .options {
+    gap: 10px;
+    margin: 2rem 0;
+  }
+  .btn {
+    min-width: 140px;
+    min-height: 100px;
+    font-size: 1.6rem;
+    padding: 1rem;
+  }
+  #new-game-btn {
+    min-width: 200px;
+    min-height: 120px;
+    font-size: 2rem;
+  }
+  .power-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .power-bar {
+    width: 14px;
+    height: 7px;
+  }
+  .credit {
+    font-size: 1.2rem;
+    margin: 1.5rem 0;
+  }
+  .tooltip {
+    font-size: 1.1rem;
+    padding: 10px 15px;
+  }
 }
-@media (max-width: 600px) {
-  .container { padding: clamp(6px, 1.5vw, 10px); justify-content: space-between; }
-  .game-container { width: min(95vw, 400px); padding: clamp(4px, 1vw, 6px); }
-  .title { font-size: clamp(3.2rem, 11vw, 4.4rem); margin: clamp(0.2rem, 0.8vw, 0.4rem) 0; }
-  .scores { gap: clamp(6px, 2vw, 10px); justify-content: space-between; }
-  .options { gap: clamp(2px, 0.5vw, 4px); margin: clamp(0.2rem, 0.8vw, 0.4rem) 0; }
-  .score-container { width: clamp(55px, 13vw, 70px); height: clamp(40px, 8vw, 50px); }
-  .score-title { font-size: clamp(0.4rem, 1.6vw, 0.5rem); }
-  .score-value { font-size: clamp(0.6rem, 2.2vw, 0.8rem); }
-  .btn { min-width: clamp(50px, 11vw, 60px); min-height: clamp(40px, 8vw, 50px); font-size: clamp(0.8rem, 2.2vw, 1rem); }
-  #new-game-btn { min-width: clamp(60px, 14vw, 80px); min-height: clamp(45px, 9vw, 60px); font-size: clamp(0.9rem, 2.5vw, 1.2rem); }
-  .cell { font-size: clamp(1.8rem, 6.5vw, 2.8rem); }
-  .power-icon { width: clamp(16px, 4.5vw, 22px); height: clamp(16px, 4.5vw, 22px); }
-  .power-bar { width: clamp(6px, 1.8vw, 8px); height: clamp(2px, 0.5vw, 3px); }
-  .tooltip { font-size: clamp(0.6rem, 1.6vw, 0.8rem); }
-  .game-over-text { font-size: clamp(1.4rem, 5vw, 1.8rem); margin-bottom: clamp(0.4rem, 1.5vw, 0.6rem); }
-  .grid { gap: clamp(3px, 1vw, 5px); }
-  .credit { font-size: clamp(0.5rem, 1.6vw, 0.7rem); }
+
+/* -- TABLET STYLES -- */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .game-container {
+    width: min(90vw, 90vh, 700px);
+  }
+  .cell {
+    font-size: clamp(3rem, 7vw, 4rem);
+  }
+  .tile-1024, .tile-2048 {
+    font-size: clamp(2.5rem, 6vw, 3rem);
+  }
 }
-@media (max-width: 400px) {
-  .container { padding: clamp(4px, 1vw, 8px); }
-  .game-container { width: min(95vw, 320px); padding: clamp(3px, 0.8vw, 5px); }
-  .title { font-size: clamp(2.8rem, 10vw, 4rem); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; }
-  .scores { gap: clamp(4px, 1.5vw, 8px); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; }
-  .options { gap: clamp(1px, 0.3vw, 2px); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; }
-  .score-container { width: clamp(50px, 12vw, 60px); height: clamp(35px, 7vw, 45px); }
-  .btn { min-width: clamp(45px, 10vw, 55px); min-height: clamp(35px, 7vw, 45px); font-size: clamp(0.7rem, 2vw, 0.9rem); }
-  #new-game-btn { min-width: clamp(55px, 12vw, 70px); min-height: clamp(40px, 8vw, 50px); font-size: clamp(0.8rem, 2.2vw, 1rem); }
-  .cell { font-size: clamp(1.6rem, 6vw, 2.4rem); }
-  .power-icon { width: clamp(14px, 4vw, 20px); height: clamp(14px, 4vw, 20px); }
-  .power-bar { width: clamp(5px, 1.5vw, 7px); height: clamp(1px, 0.4vw, 2px); }
-  .tooltip { font-size: clamp(0.5rem, 1.4vw, 0.7rem); }
-  .game-over-text { font-size: clamp(1.2rem, 4.5vw, 1.6rem); }
-  .grid { gap: clamp(2px, 0.8vw, 4px); }
-  .credit { font-size: clamp(0.4rem, 1.4vw, 0.6rem); }
+
+/* -- MOBILE STYLES -- */
+@media (max-width: 767px) {
+  .container {
+    padding: 10px;
+    justify-content: space-around;
+  }
+  .title {
+    font-size: clamp(3.5rem, 12vw, 5rem);
+    margin: 0.8rem 0;
+  }
+  .scores {
+    gap: 10px;
+    margin: 0.8rem 0;
+    max-width: 95vw;
+  }
+  .score-container {
+    width: clamp(90px, 22vw, 120px);
+    height: clamp(65px, 14vw, 80px);
+  }
+  .game-container {
+    width: min(95vw, 95vh);
+    padding: 10px;
+  }
+  .grid {
+    gap: 8px;
+  }
+  .cell {
+    font-size: clamp(2.2rem, 7vw, 3rem);
+  }
+  .options {
+    gap: 4px;
+    margin: 1rem 0;
+    max-width: 95vw;
+  }
+  .btn {
+    min-width: clamp(60px, 18vw, 90px);
+    min-height: clamp(50px, 12vw, 80px);
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
+  }
+  #new-game-btn {
+    min-width: clamp(100px, 25vw, 140px);
+    min-height: clamp(70px, 16vw, 90px);
+    font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+  }
+  .power-icon {
+    width: clamp(20px, 6vw, 28px);
+    height: clamp(20px, 6vw, 28px);
+  }
+  .power-bar {
+    width: clamp(7px, 2.5vw, 10px);
+    height: clamp(3px, 1vw, 5px);
+  }
+  .tooltip {
+    font-size: clamp(0.7rem, 2.2vw, 0.9rem);
+    padding: 6px 8px;
+  }
 }
 </style>
 </head>
