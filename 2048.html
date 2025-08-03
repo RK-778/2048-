@@ -28,7 +28,11 @@
   --easing: cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 html, body {
   width: 100%;
   height: 100%;
@@ -39,8 +43,10 @@ html, body {
   transition: background-color var(--transition-medium) var(--easing);
   overflow: hidden;
 }
-body.dark { background-color: var(--bg-dark); color: var(--text-dark); }
-
+body.dark {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
 .container {
   display: flex;
   flex-direction: column;
@@ -50,16 +56,13 @@ body.dark { background-color: var(--bg-dark); color: var(--text-dark); }
   max-width: 100vw;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 0.5rem;
-  box-sizing: border-box;
+  padding: clamp(10px, 2vw, 15px);
 }
-
 .title {
-  font-size: clamp(3rem, 8vw, 7rem);
+  font-size: clamp(4rem, 14vw, 6rem);
   font-weight: bold;
   color: var(--title-color);
-  margin-top: clamp(0.3rem, 1vw, 1.3rem);
-  margin-bottom: clamp(0.3rem, 1vw, 1.3rem);
+  margin: clamp(0.3rem, 1vw, 0.5rem) 0;
   text-transform: uppercase;
   opacity: 0;
   transform: translateY(10px);
@@ -69,24 +72,21 @@ body.dark { background-color: var(--bg-dark); color: var(--text-dark); }
   cursor: pointer;
   display: inline-block;
 }
-
 .scores {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  margin: 0.3rem 0;
+  gap: clamp(10px, 3vw, 40px);
+  margin: clamp(0.3rem, 1vw, 0.5rem) 0;
   width: 100%;
-  max-width: 900px;
-  padding: 0 0.5rem;
+  max-width: 600px;
   opacity: 0;
   animation: fadeIn var(--transition-slow) var(--easing) forwards;
   animation-delay: 0.2s;
 }
-
 .score-container {
-  width: clamp(70px, 22vw, 120px);
-  height: clamp(50px, 15vw, 80px);
+  width: clamp(70px, 15vw, 90px);
+  height: clamp(50px, 10vw, 60px);
   background: var(--btn-normal);
   border-radius: 6px;
   color: var(--btn-text);
@@ -96,56 +96,47 @@ body.dark { background-color: var(--bg-dark); color: var(--text-dark); }
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: clamp(0.8rem, 4vw, 1.4rem);
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
 }
 body.dark .score-container { background: var(--btn-hover); }
-.score-title { font-size: clamp(0.5rem, 2.5vw, 0.7rem); text-transform: uppercase; }
-.score-value { font-size: clamp(0.8rem, 4vw, 1.3rem); }
-
+.score-title { font-size: clamp(0.5rem, 2vw, 0.7rem); text-transform: uppercase; }
+.score-value { font-size: clamp(0.8rem, 3vw, 1.1rem); }
 .game-container {
-  width: 95vw;
-  height: auto;
-  aspect-ratio: 1/1;
-  max-width: 900px;
-  max-height: 90vh;
-  padding: clamp(4px, 1vw, 12px);
+  width: min(95vw, 1200px); /* Increased max-width from 600px to 800px */
+  aspect-ratio: 1 / 1;
+  padding: clamp(6px, 1.5vw, 10px);
   background-color: var(--grid-bg-light);
   border-radius: 8px;
-  margin: 0.3rem auto;
+  margin: clamp(0.3rem, 1vw, 0.5rem) auto;
   position: relative;
   opacity: 0;
   animation: fadeIn var(--transition-slow) var(--easing) forwards;
   animation-delay: 0.3s;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 body.dark .game-container { background-color: var(--grid-bg-dark); }
-
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  gap: clamp(3px, 2vw, 18px);
+  gap: clamp(5px, 1.5vw, 8px);
   width: 100%;
   height: 100%;
   transition: transform var(--transition-medium) var(--easing);
 }
-
 .cell {
   background-color: var(--cell-bg-light);
   border-radius: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: clamp(1.8rem, 6vw, 4.8rem);
+  font-size: clamp(2.2rem, 8.5vw, 4rem);
   font-weight: bold;
   color: #776e65;
   transition: all var(--transition-fast) var(--easing);
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1 / 1;
 }
 .cell.selected {
   background-color: var(--selected-tile);
@@ -164,24 +155,21 @@ body.dark .game-container { background-color: var(--grid-bg-dark); }
 .tile-1024 { background-color: #edc53f; color: #f9f6f2; }
 .tile-2048 { background-color: #edc22e; color: #f9f6f2; }
 .shatter { animation: shatter 0.5s forwards; pointer-events: none; }
-
 .credit {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   text-align: center;
-  font-size: clamp(0.7rem, 2vw, 1.3rem);
+  font-size: clamp(0.7rem, 2vw, 0.9rem);
   color: var(--text-light);
   font-weight: 500;
   pointer-events: none;
   opacity: 1;
   transition: color 0.3s ease;
-  margin: 0.3rem 0;
-  padding: 0 0.5rem;
+  margin: clamp(0.3rem, 1vw, 0.5rem) 0;
 }
 body.dark .credit { color: #776e65; }
-
 @keyframes shatter {
   0% { transform: scale(1); opacity: 1; }
   20% { transform: scale(1.1); opacity: 0.9; }
@@ -209,7 +197,7 @@ body.dark .credit { color: #776e65; }
 }
 body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
 .game-over-text {
-  font-size: clamp(1.8rem, 7vw, 2.5rem);
+  font-size: clamp(1.8rem, 6vw, 2.5rem);
   font-weight: bold;
   color: var(--title-color);
   margin-bottom: clamp(0.6rem, 2vw, 1rem);
@@ -217,16 +205,15 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
   animation: pulse 2s var(--easing) infinite;
 }
 
-/* TIGHTENED OPTIONS BUTTONS */
+/* REDUCE GAP BETWEEN BUTTONS */
 .options {
   display: flex;
-  justify-content: center;
-  gap: 0.2rem;
+  justify-content: space-between;
+  gap: clamp(2px, 0.5vw, 6px); /* REDUCED GAP */
   width: 100%;
-  max-width: 900px;
-  margin: 0.3rem 0;
+  max-width: 600px;
+  margin: clamp(0.3rem, 1vw, 0.5rem) 0;
   flex-wrap: wrap;
-  padding: 0 0.5rem;
   opacity: 0;
   animation: fadeIn var(--transition-slow) var(--easing) forwards;
   animation-delay: 0.4s;
@@ -234,11 +221,11 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
 .btn {
   background: var(--btn-normal);
   color: var(--btn-text);
-  padding: 0.4rem;
+  padding: clamp(0.5rem, 1.5vw, 0.8rem);
   border-radius: 8px;
   border: none;
   font-family: 'Rubik', sans-serif;
-  font-size: clamp(0.9rem, 3.5vw, 1.6rem);
+  font-size: clamp(1rem, 3vw, 1.4rem);
   font-weight: bold;
   text-transform: uppercase;
   cursor: pointer;
@@ -247,20 +234,19 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: clamp(50px, 18vw, 100px);
-  min-height: clamp(40px, 12vw, 80px);
-  flex: 1 1 auto;
+  min-width: clamp(60px, 14vw, 80px);
+  min-height: clamp(50px, 10vw, 70px);
 }
 #new-game-btn {
-  min-width: clamp(70px, 25vw, 140px);
-  min-height: clamp(50px, 15vw, 90px);
-  font-size: clamp(1rem, 4vw, 2.1rem);
+  min-width: clamp(80px, 18vw, 100px);
+  min-height: clamp(60px, 12vw, 80px);
+  font-size: clamp(1.2rem, 3.5vw, 1.6rem);
 }
 .btn.active { background: var(--btn-hover); transform: scale(1.05); }
 .btn:hover:not(:disabled) {
   background: var(--btn-hover);
   transform: translateY(-2px);
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 .btn:disabled {
   background: var(--btn-disabled);
@@ -271,12 +257,12 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.1rem;
+  gap: clamp(2px, 0.5vw, 3px);
   width: 100%;
 }
 .power-icon {
-  width: clamp(18px, 7vw, 26px);
-  height: clamp(18px, 7vw, 26px);
+  width: clamp(22px, 6vw, 30px);
+  height: clamp(22px, 6vw, 30px);
   fill: var(--btn-text);
   transition: all var(--transition-fast) var(--easing);
   stroke-width: 2.5;
@@ -284,13 +270,13 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
 .btn:hover:not(:disabled) .power-icon { transform: scale(1.1); }
 .power-bars {
   display: flex;
-  gap: 0.1rem;
+  gap: clamp(2px, 0.5vw, 3px);
   position: absolute;
-  bottom: 0.1rem;
+  bottom: clamp(2px, 0.5vw, 3px);
 }
 .power-bar {
-  width: clamp(6px, 3vw, 10px);
-  height: clamp(3px, 1vw, 5px);
+  width: clamp(8px, 2.5vw, 12px);
+  height: clamp(4px, 0.8vw, 6px);
   background: var(--btn-text);
   border-radius: 2px;
   transition: opacity var(--transition-fast) var(--easing);
@@ -306,13 +292,13 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
   text-transform: uppercase;
   text-align: center;
   border-radius: 6px;
-  padding: 0.3rem 0.5rem;
+  padding: clamp(5px, 1vw, 8px) clamp(8px, 2vw, 10px);
   position: absolute;
   z-index: 1000;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
   white-space: nowrap;
   opacity: 0;
   transition: opacity var(--transition-fast) var(--easing);
@@ -321,7 +307,6 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
   visibility: visible;
   opacity: 1;
 }
-
 /* RESPONSIVE TOOLTIP FIXES FOR MOBILE EDGE OVERFLOW */
 @media (max-width:700px) {
   .btn { position: relative; }
@@ -335,13 +320,12 @@ body.dark .game-over { background-color: rgba(62, 38, 26, 0.9); }
     top: 100%;
     bottom: auto;
     margin-top: 5px;
-    padding: 0.3rem;
-    font-size: 0.8rem;
+    padding: 7px 8px;
+    font-size: 1rem;
   }
   .options .btn:first-child .tooltip  { left: 0; transform: none; }
   .options .btn:last-child .tooltip   { left: auto; right: 0; transform: none; }
 }
-
 .page-transition {
   position: fixed;
   top: 0;
@@ -364,44 +348,62 @@ body.dark .page-transition { background-color: var(--bg-dark); }
   50% { transform: scale(1.05); }
 }
 
-/* --- Large tablet/iPad Pro and up --- */
-@media (min-width: 1024px) {
-  .container {
-    padding: 1.5rem 0;
-    max-width: 1200px;
-  }
-  .game-container {
-    width: 60vw;
-    max-width: 900px;
-    padding: 1.2rem;
-  }
-  .title {
-    font-size: clamp(4rem, 8vw, 7rem);
-  }
-  .score-container {
-    width: 120px;
-    height: 80px;
-    font-size: 1.4rem;
-  }
-  .btn { min-width: 100px; min-height: 80px; font-size: 1.6rem; }
-  #new-game-btn { min-width: 140px; min-height: 90px; font-size: 2.1rem; }
-  .cell { font-size: 4.8rem; }
-  .credit { font-size: 1.3rem; }
-  .grid { gap: 18px; }
+/* -- responsive tweaks -- */
+@media (max-width: 900px) {
+  .container { padding: clamp(8px, 2vw, 12px); justify-content: space-around; }
+  .game-container { width: min(95vw, 500px); padding: clamp(5px, 1.2vw, 8px); }
+  .title { font-size: clamp(3.6rem, 12vw, 5rem); }
+  .scores { gap: clamp(8px, 2.5vw, 20px); max-width: 90vw; justify-content: space-between; }
+  .options { gap: clamp(2px, 0.5vw, 5px); max-width: 90vw; justify-content: space-between; }
+  .score-container { width: clamp(60px, 14vw, 80px); height: clamp(45px, 9vw, 55px); }
+  .score-title { font-size: clamp(0.5rem, 1.8vw, 0.6rem); }
+  .score-value { font-size: clamp(0.7rem, 2.5vw, 0.9rem); }
+  .btn { min-width: clamp(55px, 12vw, 70px); min-height: clamp(45px, 9vw, 60px); font-size: clamp(0.9rem, 2.5vw, 1.2rem); }
+  #new-game-btn { min-width: clamp(70px, 16vw, 90px); min-height: clamp(50px, 10vw, 70px); font-size: clamp(1rem, 3vw, 1.4rem); }
+  .cell { font-size: clamp(2rem, 7vw, 3.2rem); }
+  .power-icon { width: clamp(18px, 5vw, 26px); height: clamp(18px, 5vw, 26px); }
+  .power-bar { width: clamp(7px, 2vw, 10px); height: clamp(3px, 0.6vw, 4px); }
+  .tooltip { font-size: clamp(0.7rem, 1.8vw, 0.9rem); }
+  .game-over-text { font-size: clamp(1.6rem, 5.5vw, 2rem); }
+  .grid { gap: clamp(4px, 1.2vw, 6px); }
+  .credit { font-size: clamp(0.6rem, 1.8vw, 0.8rem); }
 }
-
-/* Desktop/ultra-wide screens */
-@media (min-width: 1400px) {
-  .game-container {
-    width: 50vw;
-    max-width: 950px;
-    padding: 1.6rem;
-  }
-  .title {
-    font-size: clamp(5rem, 7vw, 8rem);
-  }
+@media (max-width: 600px) {
+  .container { padding: clamp(6px, 1.5vw, 10px); justify-content: space-between; }
+  .game-container { width: min(95vw, 400px); padding: clamp(4px, 1vw, 6px); }
+  .title { font-size: clamp(3.2rem, 11vw, 4.4rem); margin: clamp(0.2rem, 0.8vw, 0.4rem) 0; }
+  .scores { gap: clamp(6px, 2vw, 10px); justify-content: space-between; }
+  .options { gap: clamp(2px, 0.5vw, 4px); margin: clamp(0.2rem, 0.8vw, 0.4rem) 0; }
+  .score-container { width: clamp(55px, 13vw, 70px); height: clamp(40px, 8vw, 50px); }
+  .score-title { font-size: clamp(0.4rem, 1.6vw, 0.5rem); }
+  .score-value { font-size: clamp(0.6rem, 2.2vw, 0.8rem); }
+  .btn { min-width: clamp(50px, 11vw, 60px); min-height: clamp(40px, 8vw, 50px); font-size: clamp(0.8rem, 2.2vw, 1rem); }
+  #new-game-btn { min-width: clamp(60px, 14vw, 80px); min-height: clamp(45px, 9vw, 60px); font-size: clamp(0.9rem, 2.5vw, 1.2rem); }
+  .cell { font-size: clamp(1.8rem, 6.5vw, 2.8rem); }
+  .power-icon { width: clamp(16px, 4.5vw, 22px); height: clamp(16px, 4.5vw, 22px); }
+  .power-bar { width: clamp(6px, 1.8vw, 8px); height: clamp(2px, 0.5vw, 3px); }
+  .tooltip { font-size: clamp(0.6rem, 1.6vw, 0.8rem); }
+  .game-over-text { font-size: clamp(1.4rem, 5vw, 1.8rem); margin-bottom: clamp(0.4rem, 1.5vw, 0.6rem); }
+  .grid { gap: clamp(3px, 1vw, 5px); }
+  .credit { font-size: clamp(0.5rem, 1.6vw, 0.7rem); }
 }
-
+@media (max-width: 400px) {
+  .container { padding: clamp(4px, 1vw, 8px); }
+  .game-container { width: min(95vw, 320px); padding: clamp(3px, 0.8vw, 5px); }
+  .title { font-size: clamp(2.8rem, 10vw, 4rem); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; }
+  .scores { gap: clamp(4px, 1.5vw, 8px); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; }
+  .options { gap: clamp(1px, 0.3vw, 2px); margin: clamp(0.1rem, 0.6vw, 0.3rem) 0; }
+  .score-container { width: clamp(50px, 12vw, 60px); height: clamp(35px, 7vw, 45px); }
+  .btn { min-width: clamp(45px, 10vw, 55px); min-height: clamp(35px, 7vw, 45px); font-size: clamp(0.7rem, 2vw, 0.9rem); }
+  #new-game-btn { min-width: clamp(55px, 12vw, 70px); min-height: clamp(40px, 8vw, 50px); font-size: clamp(0.8rem, 2.2vw, 1rem); }
+  .cell { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+  .power-icon { width: clamp(14px, 4vw, 20px); height: clamp(14px, 4vw, 20px); }
+  .power-bar { width: clamp(5px, 1.5vw, 7px); height: clamp(1px, 0.4vw, 2px); }
+  .tooltip { font-size: clamp(0.5rem, 1.4vw, 0.7rem); }
+  .game-over-text { font-size: clamp(1.2rem, 4.5vw, 1.6rem); }
+  .grid { gap: clamp(2px, 0.8vw, 4px); }
+  .credit { font-size: clamp(0.4rem, 1.4vw, 0.6rem); }
+}
 </style>
 </head>
 <body>
@@ -478,7 +480,6 @@ body.dark .page-transition { background-color: var(--bg-dark); }
 <div class="credit">BUILT BY RK { 2025 } </div>
 </div>
 <script>
-// (IDENTICAL GAME LOGIC CODE, unchanged; omitted for space. Use all your JS as-is.)
 const grid = document.getElementById('grid');
 const scoreDisplay = document.getElementById('score');
 const bestScoreDisplay = document.getElementById('best-score');
